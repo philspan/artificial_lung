@@ -1,0 +1,53 @@
+Get flutter sdk:
+
+git clone https://github.com/flutter/flutter.git -b stable
+export PATH="$PATH:`pwd`/flutter/bin"
+flutter precache
+
+Check doctor
+
+flutter doctor
+
+Create .bash_profile at root directory of macOS
+
+cd ~/
+touch .bash_profile
+open -e .bash_profile
+
+Paste these into it:
+
+export PATH="$PATH:[PATH_TO_FLUTTER_GIT_DIRECTORY]/flutter/bin"
+export GEM_HOME=$HOME/.gem
+export PATH=$GEM_HOME/bin:$PATH
+
+. .bash_profile to refresh the file
+
+gem install cocoapods --user-install
+gem which cocoapods (gives directory and verifies installation)
+
+Create new project
+flutter create {name}
+Cd {name}
+Flutter run runs application using connected device
+
+Make sure using flutter blue v 0.6.1
+
+Put this in dependencies
+  flutter_blue: ^0.6.1
+Put this in main.dart
+import 'package:flutter_blue/flutter_blue.dart'
+
+Cd iOS
+Pod install
+Open Runner.xcworkspace/
+Go to runner->signing and capabilities->team and create a profile for the app
+Change bundle identifier to something unique
+
+Go to vs code, search flutter-blue.podspec and comment the line 
+# ss.header_mappings_dir = '.'
+
+Build app
+If fails, 
+In info.plist add NSBluetoothAlwaysUsageDescription as key and "Our app uses bluetooth to find, connect and transfer data between different devices" as value
+
+You also will have to accept the certificate on your iOS device in the settings
