@@ -5,15 +5,28 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:artificial_lung/co2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:artificial_lung/widgets.dart';
 
 void main() {
-  runApp(FlutterBlueApp());
+  runApp(MainApp());
+}
+
+class MainApp extends StatelessWidget {
+@override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      color: Colors.lightBlue,
+      home: CO2SensorScreen(),
+    );
+  }
 }
 
 class FlutterBlueApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
