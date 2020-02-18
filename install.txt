@@ -39,7 +39,7 @@ import 'package:flutter_blue/flutter_blue.dart'
 
 Cd ios
 Pod install
- if this doesn't work use "/Users/philspan/.gem/ruby/2.3.0/bin/pod install" in ios directory
+ if this doesn't work use "gem install cocoapods --user-install" & "/Users/philspan/.gem/ruby/2.3.0/bin/pod install" in ios directory
 Open Runner.xcworkspace/
 Go to runner->signing and capabilities->team and create a profile for the app
 Change bundle identifier to something unique
