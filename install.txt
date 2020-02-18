@@ -37,13 +37,16 @@ Put this in dependencies
 Put this in main.dart
 import 'package:flutter_blue/flutter_blue.dart'
 
-Cd iOS
+Cd ios
 Pod install
+ if this doesn't work use "/Users/philspan/.gem/ruby/2.3.0/bin/pod install" in ios directory
 Open Runner.xcworkspace/
 Go to runner->signing and capabilities->team and create a profile for the app
 Change bundle identifier to something unique
 
 Go to vs code, search flutter-blue.podspec and comment the line 
+artificial_lung/ios/.symlinks/plugins/flutter_blue/ios/flutter_blue.podspec
+
 # ss.header_mappings_dir = '.'
 
 Build app
