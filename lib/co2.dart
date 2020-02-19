@@ -9,6 +9,7 @@ class CO2SensorScreen extends StatefulWidget {
 
 class _CO2SensorScreenState extends State<CO2SensorScreen> {
   var _taps = 0;
+  bool _co2sensorbool = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,16 +25,14 @@ class _CO2SensorScreenState extends State<CO2SensorScreen> {
               child: Row(
             children: <Widget>[
               Expanded(
-                  child: Container(
-                color: Colors.red[300],
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _taps++;
-                    });
-                  },
-                ),
-              )),
+                child: Switch.adaptive(
+                    value: _co2sensorbool,
+                    onChanged: (bool newval) {
+                      setState(() {
+                        _co2sensorbool = newval;
+                      });
+                    }),
+              ),
               Container(
                 width: 100.0,
                 color: Colors.red,
