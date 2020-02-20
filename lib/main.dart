@@ -19,8 +19,16 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      color: Colors.lightBlue,
       home: CO2SensorScreen(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        brightness: Brightness.light,
+      ),
+      darkTheme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        accentColor: Colors.deepPurpleAccent,
+        brightness: Brightness.dark,
+      ),
     );
   }
 }
