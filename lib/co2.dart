@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:settings_ui/settings_ui.dart';
 
 class CO2SensorScreen extends StatefulWidget {
   const CO2SensorScreen({Key key}) : super(key: key);

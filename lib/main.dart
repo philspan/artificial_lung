@@ -10,7 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:artificial_lung/widgets.dart';
 
+import 'bluetooth.dart';
+
 void main() {
+  Bluetooth bluetooth = Bluetooth(deviceName: "", serviceUUID: "", characteristicUUID: "");
+  bluetooth.initState();
+  // these will be changed to Provider for inheritance through the tree
   runApp(MainApp());
 }
 
