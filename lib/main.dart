@@ -6,40 +6,53 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:artificial_lung/co2.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:artificial_lung/widgets.dart';
 
 import 'bluetooth.dart';
+import 'storage.dart';
 
 void main() {
-  Bluetooth bluetooth = Bluetooth(deviceName: "", serviceUUID: "", characteristicUUID: "");
+  Bluetooth bluetooth =
+      Bluetooth(deviceName: "", serviceUUID: "", characteristicUUID: "");
   bluetooth.initState();
   // these will be changed to Provider for inheritance through the tree
   runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
-@override
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CO2SensorScreen(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        accentColor: Colors.deepPurpleAccent,
-        brightness: Brightness.dark,
+    return MultiProvider(
+      providers: [
+        Provider<Bluetooth>(
+          create: (context) => Bluetooth(
+              deviceName: "", serviceUUID: "", characteristicUUID: ""),
+        ),
+        Provider<Storage>(
+          create: (context) => Storage(fileName: "File.json"),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: CO2SensorScreen(),
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+          accentColor: Colors.deepPurpleAccent,
+          brightness: Brightness.dark,
+        ),
       ),
     );
   }
 }
 
 class FlutterBlueApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

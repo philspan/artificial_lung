@@ -2,7 +2,6 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
 import 'dart:convert';
 
-
 class Bluetooth {
   FlutterBlue flutterBlue = FlutterBlue.instance;
   StreamSubscription<ScanResult> scanSubscription;
@@ -18,6 +17,11 @@ class Bluetooth {
 
   void initState() {
     startScan();
+  }
+
+  bool get isConnected {
+    if (targetDevice != null && targetCharacteristic != null) return true;
+    return false;
   }
 
   startScan() {
@@ -75,7 +79,7 @@ class Bluetooth {
     });
   }
 
-  writeData(String data) async{
+  writeData(String data) async {
     if (targetCharacteristic == null) return;
     List<int> bytes = utf8.encode(data);
     await targetCharacteristic.write(bytes);

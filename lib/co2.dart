@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+import 'bluetooth.dart';
+
 class CO2SensorScreen extends StatefulWidget {
   const CO2SensorScreen({Key key}) : super(key: key);
 
@@ -33,6 +36,8 @@ class _CO2SensorScreenState extends State<CO2SensorScreen> {
                         setState(() {
                           _co2isOn = changed;
                         });
+                        // Provider.of<Bluetooth>(context).initState();
+                        // TODO test Bluetooth and Storage providers
                       },
                     ),
                     ListTile(

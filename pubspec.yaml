@@ -21,9 +21,12 @@ dependencies:
     sdk: flutter
   flutter_blue: ^0.6.1 # ^0.6.3
   # bloc: ^3.0.0
-  flutter_bloc: ^2.1.1
+  # flutter_bloc: ^2.1.1
   cupertino_icons: ^0.1.2
-  settings_ui: ^0.2.0
+  provider: ^4.0.4
+  path_provider: ^1.6.1
+  # json_serializable: ^3.2.5 
+  # add this later for json classes
 
 dev_dependencies:
   flutter_test:
