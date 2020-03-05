@@ -5,20 +5,17 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:artificial_lung/co2.dart';
+import 'package:artificial_lung/services/bluetooth.dart';
+import 'package:artificial_lung/services/storage.dart';
+import 'package:artificial_lung/services/navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:artificial_lung/locator.dart';
 import 'package:artificial_lung/widgets.dart';
 
-import 'bluetooth.dart';
-import 'storage.dart';
-
 void main() {
-  Bluetooth bluetooth =
-      Bluetooth(deviceName: "", serviceUUID: "", characteristicUUID: "");
-  bluetooth.initState();
-  // these will be changed to Provider for inheritance through the tree
+  setupLocator();
   runApp(MainApp());
 }
 
@@ -37,7 +34,6 @@ class MainApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: CO2SensorScreen(),
         theme: ThemeData(
           primarySwatch: Colors.blue,
           brightness: Brightness.light,
@@ -47,6 +43,9 @@ class MainApp extends StatelessWidget {
           accentColor: Colors.deepPurpleAccent,
           brightness: Brightness.dark,
         ),
+        navigatorKey: locator<NavigationService>().navigatorKey,
+        onGenerateRoute: generateRoute,
+        
       ),
     );
   }

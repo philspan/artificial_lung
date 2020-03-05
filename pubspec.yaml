@@ -24,7 +24,9 @@ dependencies:
   # flutter_bloc: ^2.1.1
   cupertino_icons: ^0.1.2
   provider: ^4.0.4
+  get_it:
   path_provider: ^1.6.1
+  curved_navigation_bar:
   # json_serializable: ^3.2.5 
   # add this later for json classes
 

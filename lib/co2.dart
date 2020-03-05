@@ -1,8 +1,6 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
-import 'bluetooth.dart';
 
 class CO2SensorScreen extends StatefulWidget {
   const CO2SensorScreen({Key key}) : super(key: key);
@@ -21,13 +19,24 @@ class _CO2SensorScreenState extends State<CO2SensorScreen> {
       navigationBar: CupertinoNavigationBar(middle: Text('Control Settings')),
       child: SafeArea(
         child: Scaffold(
+          bottomNavigationBar: CurvedNavigationBar(
+            backgroundColor: Colors.black,
+            height: 40,
+            items: <Widget>[
+              Icon(Icons.history, size: 30),
+              Icon(CupertinoIcons.gear_solid, size: 30),
+              Icon(CupertinoIcons.bluetooth, size: 30),
+            ],
+            onTap: (index) {},
+
+          ),
           body: ListView(
             physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
               Card(
                 child: Column(
                   children: <Widget>[
-                    CupertinoSwitchListTile(
+                    AdaptiveSwitchListTile(
                       title: Text("Co2 Sensor"),
                       value: _co2isOn,
                       activeColor: CupertinoColors.activeGreen,
@@ -51,7 +60,7 @@ class _CO2SensorScreenState extends State<CO2SensorScreen> {
               Card(
                 child: Column(
                   children: <Widget>[
-                    CupertinoSwitchListTile(
+                    AdaptiveSwitchListTile(
                       title: Text("Flow Sensor"),
                       value: _flowisOn,
                       activeColor: CupertinoColors.activeGreen,
@@ -77,7 +86,7 @@ class _CO2SensorScreenState extends State<CO2SensorScreen> {
               Card(
                 child: Column(
                   children: <Widget>[
-                    CupertinoSwitchListTile(
+                    AdaptiveSwitchListTile(
                       title: Text("Air Pump Control"),
                       value: _airpumpisOn,
                       activeColor: CupertinoColors.activeGreen,
@@ -223,8 +232,8 @@ class _CO2SensorScreenState2 extends State<CO2SensorScreen> {
 }
 
 // switch tile for lists
-class CupertinoSwitchListTile extends StatelessWidget {
-  const CupertinoSwitchListTile({
+class AdaptiveSwitchListTile extends StatelessWidget {
+  const AdaptiveSwitchListTile({
     Key key,
     @required this.value,
     @required this.onChanged,
@@ -299,7 +308,7 @@ class CupertinoSwitchListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var color = activeColor ?? Theme.of(context).accentColor;
     print("Active color: ${color.red} ${color.green} ${color.blue}");
-    final Widget control = new CupertinoSwitch(
+    final Widget control = new Switch.adaptive(
       value: value,
       onChanged: onChanged,
       activeColor: activeColor ?? CupertinoColors.activeGreen,
