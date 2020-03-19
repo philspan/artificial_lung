@@ -4,8 +4,9 @@ import 'package:artificial_lung/views/settings/settings_view.dart';
 import 'package:flutter/material.dart';
 
 // define routes
-const String HomeRoute = '/home';
+const String HistoryRoute = '/history';
 const String SettingsRoute = '/settings';
+const String BluetoothRoute = '/bluetooth';
 // const String AnotherRoute = '/routename';
 
 class NavigationService {
@@ -21,13 +22,19 @@ class NavigationService {
 }
 
 Route<dynamic> generateRoute(RouteSettings settings) {
+  print(settings.name);
   switch (settings.name) {
-    case HomeRoute:
-      return _getPageRoute(HomeView(), settings);
+    case HistoryRoute:
+      return MaterialPageRoute(builder: (context) => HomeView());
+    // return _getPageRoute(HomeView(), settings);
     case SettingsRoute:
-      return _getPageRoute(SettingsView(), settings);
+      return MaterialPageRoute(builder: (context) => CO2SensorScreen());
+    // return _getPageRoute(CO2SensorScreen(), settings);
+    case BluetoothRoute:
+      return MaterialPageRoute(builder: (context) => SettingsView());
+    // return _getPageRoute(SettingsView(), settings);
     default:
-      return _getPageRoute(CO2SensorScreen(), settings);
+      return MaterialPageRoute(builder: (context) => CO2SensorScreen());
   }
 }
 
@@ -40,7 +47,7 @@ class _FadeRoute extends PageRouteBuilder {
   final String routeName;
   _FadeRoute({this.child, this.routeName})
       : super(
-          settings: RouteSettings(name: routeName),
+            settings: RouteSettings(name: routeName),
             pageBuilder: (
               BuildContext context,
               Animation<double> animation,
