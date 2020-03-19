@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:artificial_lung/locator.dart';
 import 'package:artificial_lung/widgets.dart';
+import 'package:artificial_lung/views/layout_template/layout_template.dart';
 
 void main() {
   setupLocator();
@@ -43,9 +44,10 @@ class MainApp extends StatelessWidget {
           accentColor: Colors.deepPurpleAccent,
           brightness: Brightness.dark,
         ),
+        builder: (context, child) => LayoutTemplate(child: child),
         navigatorKey: locator<NavigationService>().navigatorKey,
         onGenerateRoute: generateRoute,
-        
+        initialRoute: SettingsRoute,
       ),
     );
   }
