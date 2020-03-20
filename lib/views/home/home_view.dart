@@ -11,9 +11,9 @@ class HomeView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Padding(
-            padding: const EdgeInsets.fromLTRB(8, 42, 8, 8),
-            child: WelcomeContainer(),
-          ),
+          padding: const EdgeInsets.fromLTRB(8, 42, 8, 8),
+          child: WelcomeContainer(),
+        ),
         GraphContainer(),
         AspectRatio(
           aspectRatio: 1 / .47,
@@ -88,10 +88,9 @@ class BluetoothConnectionContainer extends StatelessWidget {
 class GraphContainer extends StatelessWidget {
   GraphContainer({Key key}) : super(key: key);
 
-  DateTime now = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
     return Card(
       elevation: 8.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -100,20 +99,24 @@ class GraphContainer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              '${now.month}/${now.day}/${now.year}: ${now.minute}',
+              'Today is ${now.month}/${now.day}/${now.year}. ${now.hour}:${now.minute}',
               style: TextStyle(),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: MediaQuery.of(context).size.height / 2,
+              height: MediaQuery.of(context).size.height / 3,
               width: MediaQuery.of(context).size.width * 0.9,
               child: BezierChart(
+                // bezierChartScale: BezierChartScale.WEEKLY,
+                // fromDate: DateTime.now(),
+                // toDate: DateTime(2021),
                 bezierChartScale: BezierChartScale.CUSTOM,
                 xAxisCustomValues: const [0, 5, 10, 15, 20, 25, 30, 35],
                 series: const [
                   BezierLine(
+                    lineColor: Color.fromARGB(255, 0, 39, 76),
                     data: const [
                       DataPoint<double>(value: 10, xAxis: 0),
                       DataPoint<double>(value: 130, xAxis: 5),
@@ -130,8 +133,16 @@ class GraphContainer extends StatelessWidget {
                   verticalIndicatorStrokeWidth: 3.0,
                   verticalIndicatorColor: Colors.black26,
                   showVerticalIndicator: true,
-                  backgroundColor: Colors.red,
-                  snap: false,
+                  showDataPoints: true,
+                  xAxisTextStyle:
+                      TextStyle(color: Color.fromARGB(255, 0, 39, 76)),
+                  yAxisTextStyle:
+                      TextStyle(color: Color.fromARGB(255, 0, 39, 76)),
+                  displayYAxis: true,
+                  stepsYAxis: 10,
+                  startYAxisFromNonZeroValue: true,
+                  // bubbleIndicatorColor: Color.fromARGB(255, 0, 39, 76),
+                  snap: true,
                 ),
               ),
             ),
