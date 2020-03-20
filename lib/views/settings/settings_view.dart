@@ -37,7 +37,6 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
                 value: _regulationIsOn,
                 activeColor: CupertinoColors.activeGreen,
                 onChanged: (changed) {
-                  //print("Switch changed");
                   setState(() {
                     _regulationIsOn = changed;
                   });
@@ -105,7 +104,7 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
                   child: TextField(
                     enabled: _regulationIsOn,
                     decoration: InputDecoration(
-                      labelText: "%",
+                      labelText: "Value",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
                         borderSide: BorderSide(),
@@ -125,7 +124,7 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
                   child: TextField(
                     enabled: _regulationIsOn,
                     decoration: InputDecoration(
-                      labelText: "%",
+                      labelText: "Value",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
                         borderSide: BorderSide(),
@@ -143,7 +142,7 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
                   child: TextField(
                     enabled: _regulationIsOn,
                     decoration: InputDecoration(
-                      labelText: "%",
+                      labelText: "Value",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
                         borderSide: BorderSide(),
