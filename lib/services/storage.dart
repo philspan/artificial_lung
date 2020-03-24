@@ -29,6 +29,11 @@ class Storage {
     }
   }
 
+  printstatement(String data) {
+    print(data);
+    
+  }
+
   Future<File> writeData(String data) async {
     final file = await localFile;
     return file.writeAsString("$data");
