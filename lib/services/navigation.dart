@@ -1,13 +1,12 @@
-import 'package:artificial_lung/co2.dart';
-import 'package:artificial_lung/views/home/home_view.dart';
-import 'package:artificial_lung/views/settings/settings_view.dart';
+import 'package:artificial_lung/views/history/history_view.dart';
+import 'package:artificial_lung/views/servoregulation/servoregulation_view.dart';
+import 'package:artificial_lung/views/sensors/sensors_view.dart';
 import 'package:flutter/material.dart';
 
 // define routes
 const String HistoryRoute = '/history';
-const String SettingsRoute = '/settings';
-const String BluetoothRoute = '/bluetooth';
-// const String AnotherRoute = '/routename';
+const String SensorsRoute = '/sensors';
+const String ServoRegulationRoute = '/servoregulation';
 
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -25,16 +24,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   print(settings.name);
   switch (settings.name) {
     case HistoryRoute:
-      return MaterialPageRoute(builder: (context) => HomeView());
+      return MaterialPageRoute(builder: (context) => HistoryView());
     // return _getPageRoute(HomeView(), settings);
-    case SettingsRoute:
-      return MaterialPageRoute(builder: (context) => CO2SensorScreen());
+    case SensorsRoute:
+      return MaterialPageRoute(builder: (context) => SensorsView());
     // return _getPageRoute(CO2SensorScreen(), settings);
-    case BluetoothRoute:
-      return MaterialPageRoute(builder: (context) => SettingsView());
+    case ServoRegulationRoute:
+      return MaterialPageRoute(builder: (context) => ServoRegulationView());
     // return _getPageRoute(SettingsView(), settings);
     default:
-      return MaterialPageRoute(builder: (context) => CO2SensorScreen());
+      return MaterialPageRoute(builder: (context) => SensorsView());
   }
 }
 

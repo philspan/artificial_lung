@@ -1,10 +1,11 @@
+import 'package:artificial_lung/services/storage.dart';
 import 'package:artificial_lung/widgets/adaptive_switch_list_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class SettingsView extends StatelessWidget {
-  const SettingsView({Key key}) : super(key: key);
+class ServoRegulationView extends StatelessWidget {
+  const ServoRegulationView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,7 @@ class ServoRegulationContainer extends StatefulWidget {
 
 class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
   var _regulationIsOn = false;
+  String error;
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -59,6 +61,16 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
                       ),
                     ),
                     keyboardType: TextInputType.numberWithOptions(),
+                    onChanged: (value) {
+                      setState(() {
+                        Storage(fileName: "text.txt").writeData(value);
+                        Storage(fileName: "text.txt").readData().then(
+                            (valFromFile) {
+                          error = valFromFile;
+                        }, onError: () {});
+                        print(error);
+                      });
+                    },
                   ),
                 ),
               ),
@@ -70,7 +82,7 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
                   child: TextField(
                     enabled: false,
                     decoration: InputDecoration(
-                      labelText: "%",
+                      labelText: "${error} %",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
                         borderSide: BorderSide(),

@@ -21,10 +21,10 @@ class LayoutTemplate extends StatelessWidget {
               locator<NavigationService>().navigateTo(HistoryRoute);
               break;
             case 1:
-              locator<NavigationService>().navigateTo(SettingsRoute);
+              locator<NavigationService>().navigateTo(SensorsRoute);
               break;
             case 2:
-              locator<NavigationService>().navigateTo(BluetoothRoute);
+              locator<NavigationService>().navigateTo(ServoRegulationRoute);
               break;
           }
         },

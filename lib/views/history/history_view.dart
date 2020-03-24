@@ -2,8 +2,8 @@ import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
 
-class HomeView extends StatelessWidget {
-  const HomeView({Key key}) : super(key: key);
+class HistoryView extends StatelessWidget {
+  const HistoryView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

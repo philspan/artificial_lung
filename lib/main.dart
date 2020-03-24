@@ -1,7 +1,3 @@
-// Copyright 2017, Paul DeMarco.
-// All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'dart:async';
 import 'dart:math';
 
@@ -30,7 +26,7 @@ class MainApp extends StatelessWidget {
               deviceName: "", serviceUUID: "", characteristicUUID: ""),
         ),
         Provider<Storage>(
-          create: (context) => Storage(fileName: "File.json"),
+          create: (context) => Storage(fileName: "File.txt"),
         ),
       ],
       child: MaterialApp(
@@ -47,12 +43,15 @@ class MainApp extends StatelessWidget {
         builder: (context, child) => LayoutTemplate(child: child),
         navigatorKey: locator<NavigationService>().navigatorKey,
         onGenerateRoute: generateRoute,
-        initialRoute: SettingsRoute,
+        initialRoute: SensorsRoute,
       ),
     );
   }
 }
 
+// Copyright 2017, Paul DeMarco.
+// All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 class FlutterBlueApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
