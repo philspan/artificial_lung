@@ -29,11 +29,6 @@ class Storage {
     }
   }
 
-  printstatement(String data) {
-    print(data);
-    
-  }
-
   Future<File> writeData(String data) async {
     final file = await localFile;
     return file.writeAsString("$data");
@@ -43,7 +38,7 @@ class Storage {
   Future<Map> readJSON() async {
     try {
       final file = await localFile;
-      Map <String, dynamic> jsonContent = jsonDecode(file.readAsStringSync());
+      Map<String, dynamic> jsonContent = jsonDecode(file.readAsStringSync());
       return jsonContent;
     } catch (e) {
       return e;

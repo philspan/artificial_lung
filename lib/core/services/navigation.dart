@@ -1,6 +1,6 @@
-import 'package:artificial_lung/views/history/history_view.dart';
-import 'package:artificial_lung/views/servoregulation/servoregulation_view.dart';
-import 'package:artificial_lung/views/sensors/sensors_view.dart';
+import 'package:artificial_lung/ui/views/history/history_view.dart';
+import 'package:artificial_lung/ui/views/sensors/sensors_view.dart';
+import 'package:artificial_lung/ui/views/servoregulation/servoregulation_view.dart';
 import 'package:flutter/material.dart';
 
 // define routes

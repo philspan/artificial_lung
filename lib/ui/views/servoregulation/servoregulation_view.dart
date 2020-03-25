@@ -1,47 +1,60 @@
+import 'package:artificial_lung/core/services/storage.dart';
+import 'package:artificial_lung/locator.dart';
+import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:artificial_lung/widgets/adaptive_switch_list_tile.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-class SensorsView extends StatefulWidget {
-  const SensorsView({Key key}) : super(key: key);
+class ServoRegulationView extends StatelessWidget {
+  const ServoRegulationView({Key key}) : super(key: key);
 
-  @override
-  _SensorsViewState createState() => _SensorsViewState();
-}
-
-class _SensorsViewState extends State<SensorsView> {
-  var _co2isOn = false;
-  var _flowisOn = false;
-  var _airpumpisOn = false;
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ListView(
+      child: ServoRegulationContainer(),
+    );
+  }
+}
+
+class ServoRegulationContainer extends StatefulWidget {
+  ServoRegulationContainer({Key key}) : super(key: key);
+
+  @override
+  _ServoRegulationContainerState createState() =>
+      _ServoRegulationContainerState();
+}
+
+class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
+  var _regulationIsOn = false;
+  String error;
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
           Card(
             child: Column(
               children: <Widget>[
                 AdaptiveSwitchListTile(
-                  title: Text("CO\u2082 Sensor"),
-                  value: _co2isOn,
+                  title: Text("CO\u2082 Servo Regulation"),
+                  value: _regulationIsOn,
                   activeColor: CupertinoColors.activeGreen,
                   onChanged: (changed) {
-                    //print("Switch changed");
                     setState(() {
-                      _co2isOn = changed;
+                      _regulationIsOn = changed;
                     });
                     // Provider.of<Bluetooth>(context).initState();
                     // TODO test Bluetooth and Storage providers
                   },
                 ),
                 ListTile(
-                  title: Text("CO\u2082 (%)"),
+                  title: Text("Target CO\u2082 (%)"),
                   trailing: FractionallySizedBox(
                     widthFactor: .2,
                     heightFactor: .6,
                     child: TextField(
-                      enabled: false,
+                      enabled: _regulationIsOn,
                       decoration: InputDecoration(
                         labelText: "%",
                         border: OutlineInputBorder(
@@ -50,53 +63,22 @@ class _SensorsViewState extends State<SensorsView> {
                         ),
                       ),
                       keyboardType: TextInputType.numberWithOptions(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Divider(),
-          Card(
-            child: Column(
-              children: <Widget>[
-                AdaptiveSwitchListTile(
-                  title: Text("Flow Sensor"),
-                  value: _flowisOn,
-                  activeColor: CupertinoColors.activeGreen,
-                  onChanged: (changed) {
-                    //print("Switch changed");
-                    setState(() {
-                      _flowisOn = changed;
-                    });
-                  },
-                ),
-                ListTile(
-                  title: Text("Voltage (V)"),
-                  trailing: FractionallySizedBox(
-                    widthFactor: .2,
-                    heightFactor: .6,
-                    child: TextField(
-                      enabled: false,
-                      decoration: InputDecoration(
-                        labelText: "V",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
-                      ),
-                      keyboardType: TextInputType.numberWithOptions(),
+                      onChanged: (value) {
+                          locator<Storage>().writeData(value);
+                          locator<Storage>().readData().then((valFromFile) {error = valFromFile;});
+                      },
                     ),
                   ),
                 ),
                 ListTile(
-                  title: Text("Flow (LPM)"),
+                  title: Text("Error (%)"),
                   trailing: FractionallySizedBox(
-                    widthFactor: .2,
+                    widthFactor: .5,
                     heightFactor: .6,
                     child: TextField(
                       enabled: false,
                       decoration: InputDecoration(
+                        labelText: "${error != null ? error : 0} %",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0),
                           borderSide: BorderSide(),
@@ -109,30 +91,48 @@ class _SensorsViewState extends State<SensorsView> {
               ],
             ),
           ),
-          Divider(),
           Card(
             child: Column(
               children: <Widget>[
-                AdaptiveSwitchListTile(
-                  title: Text("Air Pump Control"),
-                  value: _airpumpisOn,
-                  activeColor: CupertinoColors.activeGreen,
-                  onChanged: (changed) {
-                    //print("Switch changed");
-                    setState(() {
-                      _airpumpisOn = changed;
-                    });
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: Text(
+                      "Controller Tuning",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    alignment: Alignment.topLeft,
+                  ),
                 ),
                 ListTile(
-                  title: Text("Current (A)"),
+                  title: Text("Proportional Term"),
                   trailing: FractionallySizedBox(
                     widthFactor: .2,
                     heightFactor: .6,
                     child: TextField(
-                      enabled: false,
+                      enabled: _regulationIsOn,
                       decoration: InputDecoration(
-                        labelText: "A",
+                        labelText: "Value",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                          borderSide: BorderSide(),
+                        ),
+                      ),
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      onChanged: (String text) {},
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: Text("Integral Term"),
+                  trailing: FractionallySizedBox(
+                    widthFactor: .2,
+                    heightFactor: .6,
+                    child: TextField(
+                      enabled: _regulationIsOn,
+                      decoration: InputDecoration(
+                        labelText: "Value",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0),
                           borderSide: BorderSide(),
@@ -143,49 +143,14 @@ class _SensorsViewState extends State<SensorsView> {
                   ),
                 ),
                 ListTile(
-                  title: Text("Voltage (V)"),
+                  title: Text("Derivative Term"),
                   trailing: FractionallySizedBox(
                     widthFactor: .2,
                     heightFactor: .6,
                     child: TextField(
-                      enabled: false,
+                      enabled: _regulationIsOn,
                       decoration: InputDecoration(
-                        labelText: "V",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
-                      ),
-                      keyboardType: TextInputType.numberWithOptions(),
-                    ),
-                  ),
-                ),
-                ListTile(
-                  title: Text("Power (W)"),
-                  trailing: FractionallySizedBox(
-                    widthFactor: .2,
-                    heightFactor: .6,
-                    child: TextField(
-                      enabled: false,
-                      decoration: InputDecoration(
-                        labelText: "W",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
-                      ),
-                      keyboardType: TextInputType.numberWithOptions(),
-                    ),
-                  ),
-                ),
-                ListTile(
-                  title: Text("Estimated Flow (SLPM)"),
-                  trailing: FractionallySizedBox(
-                    widthFactor: .2,
-                    heightFactor: .6,
-                    child: TextField(
-                      enabled: false,
-                      decoration: InputDecoration(
+                        labelText: "Value",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0),
                           borderSide: BorderSide(),
@@ -199,7 +164,6 @@ class _SensorsViewState extends State<SensorsView> {
             ),
           ),
         ],
-      ),
     );
   }
 }

@@ -1,5 +1,5 @@
+import 'package:artificial_lung/core/services/navigation.dart';
 import 'package:artificial_lung/locator.dart';
-import 'package:artificial_lung/services/navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
