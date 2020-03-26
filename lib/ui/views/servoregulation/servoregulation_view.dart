@@ -31,139 +31,143 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          Card(
-            child: Column(
-              children: <Widget>[
-                AdaptiveSwitchListTile(
-                  title: Text("CO\u2082 Servo Regulation"),
-                  value: _regulationIsOn,
-                  activeColor: CupertinoColors.activeGreen,
-                  onChanged: (changed) {
-                    setState(() {
-                      _regulationIsOn = changed;
-                    });
-                    // Provider.of<Bluetooth>(context).initState();
-                    // TODO test Bluetooth and Storage providers
-                  },
-                ),
-                ListTile(
-                  title: Text("Target CO\u2082 (%)"),
-                  trailing: FractionallySizedBox(
-                    widthFactor: .2,
-                    heightFactor: .6,
-                    child: TextField(
-                      enabled: _regulationIsOn,
-                      decoration: InputDecoration(
-                        labelText: "%",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
+      physics: NeverScrollableScrollPhysics(),
+      children: <Widget>[
+        Card(
+          child: Column(
+            children: <Widget>[
+              AdaptiveSwitchListTile(
+                title: Text("CO\u2082 Servo Regulation"),
+                value: _regulationIsOn,
+                activeColor: CupertinoColors.activeGreen,
+                onChanged: (changed) {
+                  setState(() {
+                    _regulationIsOn = changed;
+                  });
+                  // Provider.of<Bluetooth>(context).initState();
+                  // TODO test Bluetooth and Storage providers
+                },
+              ),
+              ListTile(
+                title: Text("Target CO\u2082 (%)"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .2,
+                  heightFactor: .6,
+                  child: TextField(
+                    enabled: _regulationIsOn,
+                    decoration: InputDecoration(
+                      labelText: "%",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
                       ),
-                      keyboardType: TextInputType.numberWithOptions(),
-                      onChanged: (value) {
-                          locator<Storage>().writeData(value);
-                          locator<Storage>().readData().then((valFromFile) {error = valFromFile;});
-                      },
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
+                    onChanged: (value) {
+                      setState(() {
+                        locator<Storage>().writeData(value);
+                        locator<Storage>().readData().then((valFromFile) {
+                          error = valFromFile;
+                        });
+                      });
+                    },
                   ),
                 ),
-                ListTile(
-                  title: Text("Error (%)"),
-                  trailing: FractionallySizedBox(
-                    widthFactor: .5,
-                    heightFactor: .6,
-                    child: TextField(
-                      enabled: false,
-                      decoration: InputDecoration(
-                        labelText: "${error != null ? error : 0} %",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
+              ),
+              ListTile(
+                title: Text("Error (%)"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .5,
+                  heightFactor: .6,
+                  child: TextField(
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: "${error != null ? error : 0} %",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
                       ),
-                      keyboardType: TextInputType.numberWithOptions(),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    child: Text(
-                      "Controller Tuning",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    alignment: Alignment.topLeft,
+        ),
+        Card(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: Text(
+                    "Controller Tuning",
+                    style: TextStyle(fontSize: 18),
                   ),
+                  alignment: Alignment.topLeft,
                 ),
-                ListTile(
-                  title: Text("Proportional Term"),
-                  trailing: FractionallySizedBox(
-                    widthFactor: .2,
-                    heightFactor: .6,
-                    child: TextField(
-                      enabled: _regulationIsOn,
-                      decoration: InputDecoration(
-                        labelText: "Value",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
+              ),
+              ListTile(
+                title: Text("Proportional Term"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .2,
+                  heightFactor: .6,
+                  child: TextField(
+                    enabled: _regulationIsOn,
+                    decoration: InputDecoration(
+                      labelText: "Value",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
                       ),
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      onChanged: (String text) {},
                     ),
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
+                    onChanged: (String text) {},
                   ),
                 ),
-                ListTile(
-                  title: Text("Integral Term"),
-                  trailing: FractionallySizedBox(
-                    widthFactor: .2,
-                    heightFactor: .6,
-                    child: TextField(
-                      enabled: _regulationIsOn,
-                      decoration: InputDecoration(
-                        labelText: "Value",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
+              ),
+              ListTile(
+                title: Text("Integral Term"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .2,
+                  heightFactor: .6,
+                  child: TextField(
+                    enabled: _regulationIsOn,
+                    decoration: InputDecoration(
+                      labelText: "Value",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
                       ),
-                      keyboardType: TextInputType.numberWithOptions(),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
                 ),
-                ListTile(
-                  title: Text("Derivative Term"),
-                  trailing: FractionallySizedBox(
-                    widthFactor: .2,
-                    heightFactor: .6,
-                    child: TextField(
-                      enabled: _regulationIsOn,
-                      decoration: InputDecoration(
-                        labelText: "Value",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
+              ),
+              ListTile(
+                title: Text("Derivative Term"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .2,
+                  heightFactor: .6,
+                  child: TextField(
+                    enabled: _regulationIsOn,
+                    decoration: InputDecoration(
+                      labelText: "Value",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
                       ),
-                      keyboardType: TextInputType.numberWithOptions(),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
+      ],
     );
   }
 }

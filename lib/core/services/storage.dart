@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
-class Storage {
+class Storage extends ChangeNotifier {
   Storage({this.fileName});
 
   String fileName;

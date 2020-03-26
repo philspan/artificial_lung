@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -20,7 +20,7 @@ class Bluetooth extends ChangeNotifier {
     startScan();
   }
 
-  bool get isConnected {
+  Future<bool> get isConnected async {
     if (targetDevice != null && targetCharacteristic != null) return true;
     return false;
   }
