@@ -1,3 +1,3 @@
 enum ViewState {Idle, Busy}
 // enum StorageState {Idle, Busy}
-// enum BluetoothState {Idle, Busy}
+enum BluetoothStatus {Connected, Disconnected}
