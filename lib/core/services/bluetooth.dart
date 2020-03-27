@@ -1,3 +1,4 @@
+import 'package:artificial_lung/core/enums/enums.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
@@ -5,7 +6,11 @@ import 'dart:convert';
 
 class Bluetooth extends ChangeNotifier {
   FlutterBlue flutterBlue = FlutterBlue.instance;
+
   StreamSubscription<ScanResult> scanSubscription;
+  StreamSubscription<BluetoothDeviceState> deviceStateSubscription;
+  StreamController<BluetoothStatus> connectionStatusController =
+      StreamController<BluetoothStatus>();
 
   BluetoothDevice targetDevice;
   BluetoothCharacteristic targetCharacteristic;
@@ -17,13 +22,29 @@ class Bluetooth extends ChangeNotifier {
   Bluetooth({this.deviceName, this.serviceUUID, this.characteristicUUID});
 
   void initState() {
+    // initState method called automatically when inserted into the tree
     startScan();
   }
 
-  Future<bool> get isConnected async {
-    if (targetDevice != null && targetCharacteristic != null) return true;
-    return false;
+  @override
+  void dispose() { 
+    deviceStateSubscription.cancel();
+    super.dispose();
   }
+
+  BluetoothStatus _getStateFromEvent(event) {
+    switch (event) {
+      case BluetoothDeviceState.disconnected:
+        return BluetoothStatus.Disconnected;
+      case BluetoothDeviceState.connected:
+        return BluetoothStatus.Connected;
+      default:
+        return BluetoothStatus.Disconnected;
+    }
+  }
+  
+  Future<bool> get isConnected async =>
+      (await targetDevice.state.first == BluetoothDeviceState.connected);
 
   startScan() {
     flutterBlue.startScan(timeout: Duration(seconds: 4));
@@ -36,10 +57,15 @@ class Bluetooth extends ChangeNotifier {
           flutterBlue.stopScan();
           print('${scanResult.device.name} found! rssi: ${scanResult.rssi}');
           targetDevice = scanResult.device;
-          // connectToDevice();
+          connectToDevice();
         }
       },
-      onDone: () => stopScan(),
+      onDone: () {
+        if (targetDevice == null) {
+          print("targetDevice ${targetDevice}");
+        }
+        stopScan();
+      },
     );
   }
 
@@ -52,12 +78,26 @@ class Bluetooth extends ChangeNotifier {
     if (targetDevice == null) return;
 
     await targetDevice.connect();
-    discoverServices();
+
+    deviceStateSubscription =
+        targetDevice.state.listen((BluetoothDeviceState event) {
+      var connectionStatus = _getStateFromEvent(event);
+      connectionStatusController.add(connectionStatus);
+    }, onError: () {
+      connectionStatusController.add(BluetoothStatus.Disconnected);
+    });
+
+    List<BluetoothDevice> connectedDevices = await flutterBlue.connectedDevices;
+    if (connectedDevices.contains(deviceName)) {
+      discoverServices();
+      print(targetDevice.name);
+    }
   }
 
   disconnectFromDevice() {
     if (targetDevice == null) return;
 
+    deviceStateSubscription.cancel();
     targetDevice.disconnect();
   }
 

@@ -1,4 +1,4 @@
-import 'package:artificial_lung/core/enums/viewstate.dart';
+import 'package:artificial_lung/core/enums/enums.dart';
 import 'package:flutter/foundation.dart';
 
 class BaseModel extends ChangeNotifier {

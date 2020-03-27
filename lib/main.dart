@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:artificial_lung/core/enums/enums.dart';
+import 'package:artificial_lung/core/services/bluetooth.dart';
 import 'package:artificial_lung/core/services/navigation.dart';
 import 'package:artificial_lung/ui/views/layout_template/layout_template.dart';
 import 'package:artificial_lung/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:artificial_lung/locator.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   setupLocator();
@@ -16,21 +19,26 @@ void main() {
 class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
+    return StreamProvider<BluetoothStatus>(
+      create: (context) =>
+          locator<Bluetooth>().connectionStatusController.stream,
+      initialData: BluetoothStatus.Disconnected,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+          accentColor: Colors.deepPurpleAccent,
+          brightness: Brightness.dark,
+        ),
+        builder: (context, child) => LayoutTemplate(child: child),
+        navigatorKey: locator<NavigationService>().navigatorKey,
+        onGenerateRoute: generateRoute,
+        initialRoute: SensorsRoute,
       ),
-      darkTheme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        accentColor: Colors.deepPurpleAccent,
-        brightness: Brightness.dark,
-      ),
-      builder: (context, child) => LayoutTemplate(child: child),
-      navigatorKey: locator<NavigationService>().navigatorKey,
-      onGenerateRoute: generateRoute,
-      initialRoute: SensorsRoute,
     );
   }
 }
