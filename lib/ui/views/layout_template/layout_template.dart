@@ -5,13 +5,18 @@ import 'package:artificial_lung/ui/views/baseview/base_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LayoutTemplate extends StatelessWidget {
+class LayoutTemplate extends StatefulWidget {
   final Widget child;
   const LayoutTemplate({Key key, @required this.child}) : super(key: key);
 
   @override
+  _LayoutTemplateState createState() => _LayoutTemplateState();
+}
+
+class _LayoutTemplateState extends State<LayoutTemplate> {
+  int _currentIndex = 1;
+  @override
   Widget build(BuildContext context) {
-    int _currentIndex = 1;
     return BaseView<StorageModel>(
       onModelReady: (model) {},
       builder: (context, model, child) => Scaffold(
@@ -19,7 +24,9 @@ class LayoutTemplate extends StatelessWidget {
           currentIndex: _currentIndex,
           activeColor: CupertinoColors.activeBlue,
           onTap: (int value) {
-            _currentIndex = value;
+            setState(() {
+              _currentIndex = value;
+            });
             switch (value) {
               case 0:
                 locator<NavigationService>().navigateTo(HistoryRoute);
@@ -46,7 +53,7 @@ class LayoutTemplate extends StatelessWidget {
         ),
         backgroundColor: CupertinoColors.lightBackgroundGray,
         body: Center(
-          child: this.child,
+          child: this.widget.child,
         ),
       ),
     );
