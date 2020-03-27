@@ -26,7 +26,7 @@ class ServoRegulationContainer extends StatefulWidget {
 
 class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
   var _regulationIsOn = false;
-  String error;
+  String error = "";
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -62,10 +62,10 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
                       ),
                     ),
                     keyboardType: TextInputType.numberWithOptions(),
-                    onChanged: (value) {
-                      setState(() {
-                        locator<Storage>().writeData(value);
-                        locator<Storage>().readData().then((valFromFile) {
+                    onSubmitted: (value) {
+                      locator<Storage>().writeData(value);
+                      locator<Storage>().readData().then((valFromFile) {
+                        setState(() {
                           error = valFromFile;
                         });
                       });
@@ -94,79 +94,93 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
             ],
           ),
         ),
-        Card(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: Text(
-                    "Controller Tuning",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  alignment: Alignment.topLeft,
-                ),
-              ),
-              ListTile(
-                title: Text("Proportional Term"),
-                trailing: FractionallySizedBox(
-                  widthFactor: .2,
-                  heightFactor: .6,
-                  child: TextField(
-                    enabled: _regulationIsOn,
-                    decoration: InputDecoration(
-                      labelText: "Value",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
-                    ),
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    onChanged: (String text) {},
-                  ),
-                ),
-              ),
-              ListTile(
-                title: Text("Integral Term"),
-                trailing: FractionallySizedBox(
-                  widthFactor: .2,
-                  heightFactor: .6,
-                  child: TextField(
-                    enabled: _regulationIsOn,
-                    decoration: InputDecoration(
-                      labelText: "Value",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
-                    ),
-                    keyboardType: TextInputType.numberWithOptions(),
-                  ),
-                ),
-              ),
-              ListTile(
-                title: Text("Derivative Term"),
-                trailing: FractionallySizedBox(
-                  widthFactor: .2,
-                  heightFactor: .6,
-                  child: TextField(
-                    enabled: _regulationIsOn,
-                    decoration: InputDecoration(
-                      labelText: "Value",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
-                    ),
-                    keyboardType: TextInputType.numberWithOptions(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        PIDCard(regulationIsOn: _regulationIsOn),
       ],
+    );
+  }
+}
+
+class PIDCard extends StatelessWidget {
+  const PIDCard({
+    Key key,
+    @required bool regulationIsOn,
+  })  : _regulationIsOn = regulationIsOn,
+        super(key: key);
+
+  final bool _regulationIsOn;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              child: Text(
+                "Controller Tuning",
+                style: TextStyle(fontSize: 18),
+              ),
+              alignment: Alignment.topLeft,
+            ),
+          ),
+          ListTile(
+            title: Text("Proportional Term"),
+            trailing: FractionallySizedBox(
+              widthFactor: .2,
+              heightFactor: .6,
+              child: TextField(
+                enabled: _regulationIsOn,
+                decoration: InputDecoration(
+                  labelText: "Value",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(),
+                  ),
+                ),
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                onChanged: (String text) {},
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text("Integral Term"),
+            trailing: FractionallySizedBox(
+              widthFactor: .2,
+              heightFactor: .6,
+              child: TextField(
+                enabled: _regulationIsOn,
+                decoration: InputDecoration(
+                  labelText: "Value",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(),
+                  ),
+                ),
+                keyboardType: TextInputType.numberWithOptions(),
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text("Derivative Term"),
+            trailing: FractionallySizedBox(
+              widthFactor: .2,
+              heightFactor: .6,
+              child: TextField(
+                enabled: _regulationIsOn,
+                decoration: InputDecoration(
+                  labelText: "Value",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(),
+                  ),
+                ),
+                keyboardType: TextInputType.numberWithOptions(),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
