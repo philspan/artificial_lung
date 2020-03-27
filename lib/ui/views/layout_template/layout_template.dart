@@ -24,19 +24,21 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
           currentIndex: _currentIndex,
           activeColor: CupertinoColors.activeBlue,
           onTap: (int value) {
-            setState(() {
-              _currentIndex = value;
-            });
-            switch (value) {
-              case 0:
-                locator<NavigationService>().navigateTo(HistoryRoute);
-                break;
-              case 1:
-                locator<NavigationService>().navigateTo(SensorsRoute);
-                break;
-              case 2:
-                locator<NavigationService>().navigateTo(ServoRegulationRoute);
-                break;
+            if (_currentIndex != value) {
+              setState(() {
+                _currentIndex = value;
+              });
+              switch (value) {
+                case 0:
+                  locator<NavigationService>().navigateTo(HistoryRoute);
+                  break;
+                case 1:
+                  locator<NavigationService>().navigateTo(SensorsRoute);
+                  break;
+                case 2:
+                  locator<NavigationService>().navigateTo(ServoRegulationRoute);
+                  break;
+              }
             }
           },
           items: [
