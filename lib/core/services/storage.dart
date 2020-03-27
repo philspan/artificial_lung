@@ -35,6 +35,10 @@ class Storage extends ChangeNotifier {
     return file.writeAsString("$data");
   }
 
+  Future<File> appendData(String data) async {
+    return writeData(await readData() + data);
+  }
+
 // change to class object
   Future<Map> readJSON() async {
     try {
