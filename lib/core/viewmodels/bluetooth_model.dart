@@ -6,7 +6,19 @@ import 'package:artificial_lung/locator.dart';
 class BluetoothModel extends BaseModel {
   final Bluetooth _bluetooth = locator<Bluetooth>();
 
-  bool connection = false;
+  BluetoothStatus _bluetoothState = BluetoothStatus.Disconnected;
+  BluetoothStatus get bluetoothState => _bluetoothState;
+  
+  /*
+  Future<BluetoothStatus> get bluetoothState async {
+    await isConnected();
+    return _bluetoothState;
+  }*/
+
+  void setState(bluetoothState) {
+    _bluetoothState = bluetoothState;
+    notifyListeners();
+  }
 
   // might need a rework
   Future initialize() {
@@ -16,22 +28,18 @@ class BluetoothModel extends BaseModel {
   }
 
   Future isConnected() async {
-    setState(ViewState.Busy);
     var isConnected = await _bluetooth.isConnected;
-    Future.delayed(Duration(seconds: 2));
-    setState(ViewState.Idle);
-    connection = isConnected;
-    return connection;
+    _bluetoothState =
+        isConnected ? BluetoothStatus.Connected : BluetoothStatus.Disconnected;
+    return _bluetoothState;
   }
 
   Future<bool> connectToDevice() async {
-    setState(ViewState.Busy);
     await _bluetooth.connectToDevice();
     return isConnected();
   }
 
   Future<bool> disconnectFromDevice() async {
-    setState(ViewState.Busy);
     await _bluetooth.disconnectFromDevice();
     return isConnected();
   }

@@ -16,7 +16,9 @@ class GraphContainer extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Today is ${now.month}/${now.day}/${now.year}. ${now.hour}:${now.minute}',
-              style: TextStyle(),
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
           ),
           Padding(
@@ -55,7 +57,7 @@ class GraphContainer extends StatelessWidget {
                   yAxisTextStyle:
                       TextStyle(color: Color.fromARGB(255, 0, 39, 76)),
                   displayYAxis: true,
-                  stepsYAxis: 10,
+                  stepsYAxis: 20,
                   startYAxisFromNonZeroValue: true,
                   // bubbleIndicatorColor: Color.fromARGB(255, 0, 39, 76),
                   snap: true,

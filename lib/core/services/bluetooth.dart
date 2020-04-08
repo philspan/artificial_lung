@@ -8,7 +8,7 @@ class Bluetooth extends ChangeNotifier {
   FlutterBlue flutterBlue = FlutterBlue.instance;
 
   StreamSubscription<ScanResult> scanSubscription;
-  StreamSubscription<BluetoothDeviceState> deviceStateSubscription;
+  // StreamSubscription<BluetoothDeviceState> deviceStateSubscription;
   StreamController<BluetoothStatus> connectionStatusController =
       StreamController<BluetoothStatus>();
 
@@ -27,8 +27,8 @@ class Bluetooth extends ChangeNotifier {
   }
 
   @override
-  void dispose() { 
-    deviceStateSubscription.cancel();
+  void dispose() {
+    // deviceStateSubscription.cancel();
     super.dispose();
   }
 
@@ -42,9 +42,15 @@ class Bluetooth extends ChangeNotifier {
         return BluetoothStatus.Disconnected;
     }
   }
-  
+
+  // this works directly with the bluetooth plugin
   Future<bool> get isConnected async =>
       (await targetDevice.state.first == BluetoothDeviceState.connected);
+
+  // this version uses our stream and separates from the bluetooth plugin
+  Future<bool> get isConnected2 async =>
+      (await connectionStatusController.stream.first == BluetoothStatus.Connected);
+  
 
   startScan() {
     flutterBlue.startScan(timeout: Duration(seconds: 4));
@@ -62,7 +68,8 @@ class Bluetooth extends ChangeNotifier {
       },
       onDone: () {
         if (targetDevice == null) {
-          print("targetDevice ${targetDevice}");
+          connectToDevice(); // adds Disconnected status to stream
+          print("targetDevice: ${targetDevice}");
         }
         stopScan();
       },
@@ -75,12 +82,14 @@ class Bluetooth extends ChangeNotifier {
   }
 
   connectToDevice() async {
-    if (targetDevice == null) return;
+    if (targetDevice == null) {
+      connectionStatusController.add(BluetoothStatus.Disconnected);
+      return;
+    }
 
     await targetDevice.connect();
 
-    deviceStateSubscription =
-        targetDevice.state.listen((BluetoothDeviceState event) {
+    targetDevice.state.listen((BluetoothDeviceState event) {
       var connectionStatus = _getStateFromEvent(event);
       connectionStatusController.add(connectionStatus);
     }, onError: () {
@@ -97,7 +106,7 @@ class Bluetooth extends ChangeNotifier {
   disconnectFromDevice() {
     if (targetDevice == null) return;
 
-    deviceStateSubscription.cancel();
+    // deviceStateSubscription.cancel();
     targetDevice.disconnect();
   }
 
