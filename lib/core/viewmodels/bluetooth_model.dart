@@ -8,39 +8,31 @@ class BluetoothModel extends BaseModel {
 
   BluetoothStatus _bluetoothState = BluetoothStatus.Disconnected;
   BluetoothStatus get bluetoothState => _bluetoothState;
-  
-  /*
-  Future<BluetoothStatus> get bluetoothState async {
-    await isConnected();
-    return _bluetoothState;
-  }*/
+
+  BluetoothModel() {
+    initState();
+  }
+
+  void initState() {
+    _bluetooth.initState();
+    _bluetooth.connectionStatusController.stream.listen((event) {
+      setState(event);
+      print(event); // prints in console at every change
+    });
+  }
 
   void setState(bluetoothState) {
     _bluetoothState = bluetoothState;
     notifyListeners();
   }
 
-  // might need a rework
-  Future initialize() {
-    setState(ViewState.Busy);
-    _bluetooth.initState();
-    return isConnected();
-  }
-
-  Future isConnected() async {
-    var isConnected = await _bluetooth.isConnected;
-    _bluetoothState =
-        isConnected ? BluetoothStatus.Connected : BluetoothStatus.Disconnected;
-    return _bluetoothState;
-  }
-
-  Future<bool> connectToDevice() async {
+  Future connectToDevice() async {
     await _bluetooth.connectToDevice();
-    return isConnected();
+    return bluetoothState;
   }
 
-  Future<bool> disconnectFromDevice() async {
+  Future disconnectFromDevice() async {
     await _bluetooth.disconnectFromDevice();
-    return isConnected();
+    return bluetoothState;
   }
 }

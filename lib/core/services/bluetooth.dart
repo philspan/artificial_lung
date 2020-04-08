@@ -1,16 +1,15 @@
 import 'package:artificial_lung/core/enums/enums.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
 import 'dart:convert';
 
-class Bluetooth extends ChangeNotifier {
+class Bluetooth {
   FlutterBlue flutterBlue = FlutterBlue.instance;
 
   StreamSubscription<ScanResult> scanSubscription;
   // StreamSubscription<BluetoothDeviceState> deviceStateSubscription;
   StreamController<BluetoothStatus> connectionStatusController =
-      StreamController<BluetoothStatus>();
+      StreamController<BluetoothStatus>.broadcast();
 
   BluetoothDevice targetDevice;
   BluetoothCharacteristic targetCharacteristic;
@@ -26,12 +25,6 @@ class Bluetooth extends ChangeNotifier {
     startScan();
   }
 
-  @override
-  void dispose() {
-    // deviceStateSubscription.cancel();
-    super.dispose();
-  }
-
   BluetoothStatus _getStateFromEvent(event) {
     switch (event) {
       case BluetoothDeviceState.disconnected:
@@ -43,37 +36,35 @@ class Bluetooth extends ChangeNotifier {
     }
   }
 
-  // this works directly with the bluetooth plugin
-  Future<bool> get isConnected async =>
-      (await targetDevice.state.first == BluetoothDeviceState.connected);
-
-  // this version uses our stream and separates from the bluetooth plugin
-  Future<bool> get isConnected2 async =>
-      (await connectionStatusController.stream.first == BluetoothStatus.Connected);
-  
-
   startScan() {
-    flutterBlue.startScan(timeout: Duration(seconds: 4));
+    flutterBlue.isAvailable.then((value) {
+      if (value) {
+        flutterBlue.startScan(timeout: Duration(seconds: 4));
 
-    // Listen to scan results
-    scanSubscription = flutterBlue.scan().listen(
-      (scanResult) {
-        // search for deviceName
-        if (scanResult.device.name == deviceName) {
-          flutterBlue.stopScan();
-          print('${scanResult.device.name} found! rssi: ${scanResult.rssi}');
-          targetDevice = scanResult.device;
-          connectToDevice();
-        }
-      },
-      onDone: () {
-        if (targetDevice == null) {
-          connectToDevice(); // adds Disconnected status to stream
-          print("targetDevice: ${targetDevice}");
-        }
-        stopScan();
-      },
-    );
+        // Listen to scan results
+        scanSubscription = flutterBlue.scan().listen(
+          (scanResult) {
+            // search for deviceName
+            if (scanResult.device.name == deviceName) {
+              flutterBlue.stopScan();
+              print(
+                  '${scanResult.device.name} found! rssi: ${scanResult.rssi}');
+              targetDevice = scanResult.device;
+              connectToDevice();
+            }
+          },
+          onDone: () {
+            if (targetDevice == null) {
+              connectToDevice(); // adds Disconnected status to stream
+              print("targetDevice: ${targetDevice}");
+            }
+            stopScan();
+          },
+        );
+      } else {
+        connectToDevice(); // add Disconnected status
+      }
+    });
   }
 
   stopScan() {

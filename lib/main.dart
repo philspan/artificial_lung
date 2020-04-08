@@ -19,26 +19,21 @@ void main() {
 class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<BluetoothStatus>(
-      create: (context) =>
-          locator<Bluetooth>().connectionStatusController.stream,
-      initialData: BluetoothStatus.Disconnected,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          brightness: Brightness.light,
-        ),
-        darkTheme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-          accentColor: Colors.deepPurpleAccent,
-          brightness: Brightness.dark,
-        ),
-        builder: (context, child) => LayoutTemplate(child: child),
-        navigatorKey: locator<NavigationService>().navigatorKey,
-        onGenerateRoute: generateRoute,
-        initialRoute: SensorsRoute,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        brightness: Brightness.light,
       ),
+      darkTheme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        accentColor: Colors.deepPurpleAccent,
+        brightness: Brightness.dark,
+      ),
+      builder: (context, child) => LayoutTemplate(child: child),
+      navigatorKey: locator<NavigationService>().navigatorKey,
+      onGenerateRoute: generateRoute,
+      initialRoute: SensorsRoute,
     );
   }
 }

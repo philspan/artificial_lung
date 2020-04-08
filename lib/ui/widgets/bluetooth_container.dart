@@ -2,15 +2,12 @@ import 'package:artificial_lung/core/enums/enums.dart';
 import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
 import 'package:artificial_lung/ui/views/baseview/base_view.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
 
 class BluetoothConnectionContainer extends StatelessWidget {
   const BluetoothConnectionContainer({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // var connectionStatus = Provider.of<BluetoothStatus>(context);
-
     return BaseView<BluetoothModel>(
       onModelReady: (model) => {},
       builder: (context, model, child) => Card(
@@ -39,8 +36,10 @@ class BluetoothConnectionContainer extends StatelessWidget {
                   child: model.viewState == ViewState.Busy
                       ? (CircularProgressIndicator())
                       : Text(
-                          //(connectionStatus  == BluetoothStatus.Connected) ? "CONNECTED" : "DISCONNECTED",
-                          (model.bluetoothState == BluetoothStatus.Connected ? "CONNECTED" : "DISCONNECTED"), textAlign: TextAlign.center,
+                          (model.bluetoothState == BluetoothStatus.Connected
+                              ? "CONNECTED"
+                              : "DISCONNECTED"),
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24,
                             color: Colors.white,
