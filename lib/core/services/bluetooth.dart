@@ -1,7 +1,8 @@
-import 'package:artificial_lung/core/enums/enums.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:artificial_lung/core/enums/enums.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 class Bluetooth {
   FlutterBlue flutterBlue = FlutterBlue.instance;

@@ -2,6 +2,7 @@ import 'package:artificial_lung/core/services/bluetooth.dart';
 import 'package:artificial_lung/core/services/navigation.dart';
 import 'package:artificial_lung/core/services/storage.dart';
 import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
+import 'package:artificial_lung/core/viewmodels/sensor_model.dart';
 import 'package:artificial_lung/core/viewmodels/storage_model.dart';
 import 'package:get_it/get_it.dart';
 
@@ -15,4 +16,5 @@ void setupLocator() {
 
   locator.registerFactory(() => BluetoothModel());
   locator.registerLazySingleton(() => StorageModel());
+  locator.registerFactory(() => SensorModel());
 }

@@ -13,6 +13,12 @@ class BluetoothModel extends BaseModel {
     initState();
   }
 
+  @override
+  void dispose() {
+    _bluetooth.connectionStatusController.close();
+    super.dispose();
+  }
+
   void initState() {
     _bluetooth.initState();
     _bluetooth.connectionStatusController.stream.listen((event) {
