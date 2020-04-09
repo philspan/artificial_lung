@@ -1,6 +1,9 @@
+import 'package:artificial_lung/core/enums/enums.dart';
 import 'package:artificial_lung/core/services/storage.dart';
+import 'package:artificial_lung/core/viewmodels/sensor_model.dart';
 import 'package:artificial_lung/locator.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
+import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,92 +13,83 @@ class ServoRegulationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ServoRegulationContainer(),
+    return ListView(
+      physics: NeverScrollableScrollPhysics(),
+      children: <Widget>[
+        ServoCard(),
+        PIDCard(),
+      ],
     );
   }
 }
 
-class ServoRegulationContainer extends StatefulWidget {
-  ServoRegulationContainer({Key key}) : super(key: key);
+class ServoCard extends StatelessWidget {
+  const ServoCard({
+    Key key,
+  }) : super(key: key);
 
-  @override
-  _ServoRegulationContainerState createState() =>
-      _ServoRegulationContainerState();
-}
-
-class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
-  var _regulationIsOn = false;
-  String error = "";
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: NeverScrollableScrollPhysics(),
-      children: <Widget>[
-        Card(
-          child: Column(
-            children: <Widget>[
-              AdaptiveSwitchListTile(
-                title: Text("CO\u2082 Servo Regulation"),
-                value: _regulationIsOn,
-                activeColor: CupertinoColors.activeGreen,
-                onChanged: (changed) {
-                  setState(() {
-                    _regulationIsOn = changed;
-                  });
-                  // Provider.of<Bluetooth>(context).initState();
-                  // TODO test Bluetooth and Storage providers
-                },
-              ),
-              ListTile(
-                title: Text("Target CO\u2082 (%)"),
-                trailing: FractionallySizedBox(
-                  widthFactor: .2,
-                  heightFactor: .6,
-                  child: TextField(
-                    enabled: _regulationIsOn,
-                    decoration: InputDecoration(
-                      labelText: "%",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
+    return BaseWidget<SensorModel>(
+      onModelReady: (model) => {},
+      builder: (context, model, child) => Card(
+        child: Column(
+          children: <Widget>[
+            AdaptiveSwitchListTile(
+              title: Text("CO\u2082 Servo Regulation"),
+              value: model.servoState == ServoRegulationStatus.Enabled,
+              activeColor: CupertinoColors.activeGreen,
+              onChanged: (changed) {
+                changed
+                    ? model.setState(ServoRegulationStatus.Enabled)
+                    : model.setState(ServoRegulationStatus.Disabled);
+              },
+            ),
+            ListTile(
+              title: Text("Target CO\u2082 (%)"),
+              trailing: FractionallySizedBox(
+                widthFactor: .2,
+                heightFactor: .6,
+                child: TextField(
+                  enabled: model.servoState == ServoRegulationStatus.Enabled,
+                  decoration: InputDecoration(
+                    labelText: "%",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
                     ),
-                    keyboardType: TextInputType.numberWithOptions(),
-                    onSubmitted: (value) {
-                      locator<Storage>().writeData(value);
-                      locator<Storage>().readData().then((valFromFile) {
-                        setState(() {
-                          error = valFromFile;
-                        });
-                      });
-                    },
                   ),
+                  keyboardType: TextInputType.numberWithOptions(),
+                  onSubmitted: (value) {
+                    locator<Storage>().writeData(value);
+                    locator<Storage>().readData().then((valFromFile) {
+                      //error = valFromFile;
+                    });
+                  },
                 ),
               ),
-              ListTile(
-                title: Text("Error (%)"),
-                trailing: FractionallySizedBox(
-                  widthFactor: .5,
-                  heightFactor: .6,
-                  child: TextField(
-                    enabled: false,
-                    decoration: InputDecoration(
-                      labelText: "${error != null ? error : 0} %",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
+            ),
+            ListTile(
+              title: Text("Error (%)"),
+              trailing: FractionallySizedBox(
+                widthFactor: .5,
+                heightFactor: .6,
+                child: TextField(
+                  enabled: false,
+                  decoration: InputDecoration(
+                    labelText: "", //"${error != null ? error : 0} %",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
                     ),
-                    keyboardType: TextInputType.numberWithOptions(),
                   ),
+                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        PIDCard(regulationIsOn: _regulationIsOn),
-      ],
+      ),
     );
   }
 }
@@ -103,83 +97,82 @@ class _ServoRegulationContainerState extends State<ServoRegulationContainer> {
 class PIDCard extends StatelessWidget {
   const PIDCard({
     Key key,
-    @required bool regulationIsOn,
-  })  : _regulationIsOn = regulationIsOn,
-        super(key: key);
-
-  final bool _regulationIsOn;
-
+  }) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: Text(
-                "Controller Tuning",
-                style: TextStyle(fontSize: 18),
-              ),
-              alignment: Alignment.topLeft,
-            ),
-          ),
-          ListTile(
-            title: Text("Proportional Term"),
-            trailing: FractionallySizedBox(
-              widthFactor: .2,
-              heightFactor: .6,
-              child: TextField(
-                enabled: _regulationIsOn,
-                decoration: InputDecoration(
-                  labelText: "Value",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(),
-                  ),
+    return BaseWidget<SensorModel>(
+      onModelReady: (model) => {},
+      builder: (context, model, child) => Card(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: Text(
+                  "Controller Tuning",
+                  style: TextStyle(fontSize: 18),
                 ),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                onChanged: (String text) {},
+                alignment: Alignment.topLeft,
               ),
             ),
-          ),
-          ListTile(
-            title: Text("Integral Term"),
-            trailing: FractionallySizedBox(
-              widthFactor: .2,
-              heightFactor: .6,
-              child: TextField(
-                enabled: _regulationIsOn,
-                decoration: InputDecoration(
-                  labelText: "Value",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(),
+            ListTile(
+              title: Text("Proportional Term"),
+              trailing: FractionallySizedBox(
+                widthFactor: .2,
+                heightFactor: .6,
+                child: TextField(
+                  enabled: model.servoState == ServoRegulationStatus.Enabled,
+                  decoration: InputDecoration(
+                    labelText: "Value",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
+                    ),
                   ),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (String text) {},
                 ),
-                keyboardType: TextInputType.numberWithOptions(),
               ),
             ),
-          ),
-          ListTile(
-            title: Text("Derivative Term"),
-            trailing: FractionallySizedBox(
-              widthFactor: .2,
-              heightFactor: .6,
-              child: TextField(
-                enabled: _regulationIsOn,
-                decoration: InputDecoration(
-                  labelText: "Value",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(),
+            ListTile(
+              title: Text("Integral Term"),
+              trailing: FractionallySizedBox(
+                widthFactor: .2,
+                heightFactor: .6,
+                child: TextField(
+                  enabled: model.servoState == ServoRegulationStatus.Enabled,
+                  decoration: InputDecoration(
+                    labelText: "Value",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
+                    ),
                   ),
+                  keyboardType: TextInputType.numberWithOptions(),
                 ),
-                keyboardType: TextInputType.numberWithOptions(),
               ),
             ),
-          ),
-        ],
+            ListTile(
+              title: Text("Derivative Term"),
+              trailing: FractionallySizedBox(
+                widthFactor: .2,
+                heightFactor: .6,
+                child: TextField(
+                  enabled: model.servoState == ServoRegulationStatus.Enabled,
+                  decoration: InputDecoration(
+                    labelText: "Value",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                  keyboardType: TextInputType.numberWithOptions(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -14,7 +14,7 @@ void setupLocator() {
   locator.registerLazySingleton(
       () => Bluetooth(deviceName: "", serviceUUID: "", characteristicUUID: ""));
 
-  locator.registerFactory(() => BluetoothModel());
+  locator.registerLazySingleton(() => BluetoothModel());
   locator.registerLazySingleton(() => StorageModel());
-  locator.registerFactory(() => SensorModel());
+  locator.registerLazySingleton(() => SensorModel());
 }

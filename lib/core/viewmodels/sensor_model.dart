@@ -52,7 +52,7 @@ class SensorModel extends BaseModel {
     // initialize as completely disabled
     // later, change to get current status from device
     // initState is called on application open
-    co2StatusController.add(CO2Status.Enabled); // need to change from factory to singleton, keeps creating new streams to listen to :(
+    co2StatusController.add(CO2Status.Disabled); // need to change from factory to singleton, keeps creating new streams to listen to :(
     flowStatusController.add(FlowStatus.Disabled);
     airStatusController.add(AirStatus.Disabled);
     servoStatusController.add(ServoRegulationStatus.Disabled);
