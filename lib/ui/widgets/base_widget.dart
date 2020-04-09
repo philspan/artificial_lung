@@ -3,32 +3,32 @@ import 'package:artificial_lung/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BaseView<T extends BaseModel> extends StatefulWidget {
+class BaseWidget<T extends BaseModel> extends StatefulWidget {
   final Widget Function(BuildContext context, T value, Widget child) builder;
   final Function(T) onModelReady;
 
-  BaseView({this.builder, this.onModelReady});
+  BaseWidget({this.builder, this.onModelReady});
 
   @override
-  _BaseViewState<T> createState() => _BaseViewState<T>();
+  _BaseWidgetState<T> createState() => _BaseWidgetState<T>();
 }
 
-class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
-  
+class _BaseWidgetState<T extends BaseModel> extends State<BaseWidget<T>> {
   T model = locator<T>();
 
   @override
-  void initState() { 
+  void initState() {
     if (widget.onModelReady != null) {
       widget.onModelReady(model);
     }
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<T>(
-      create: (context) => locator<T>(),
+    // ChangeNotifierProvider<T>.value causes memory leaks over ChangeNotifierProvider<T>
+    return ChangeNotifierProvider<T>.value(
+      value: model,
       child: Consumer<T>(builder: widget.builder),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:artificial_lung/core/services/navigation.dart';
 import 'package:artificial_lung/core/viewmodels/storage_model.dart';
 import 'package:artificial_lung/locator.dart';
-import 'package:artificial_lung/ui/views/baseview/base_view.dart';
+import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
   int _currentIndex = 1;
   @override
   Widget build(BuildContext context) {
-    return BaseView<StorageModel>(
+    return BaseWidget<StorageModel>(
       onModelReady: (model) {},
       builder: (context, model, child) => Scaffold(
         bottomNavigationBar: CupertinoTabBar(
