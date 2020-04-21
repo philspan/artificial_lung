@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:artificial_lung/core/models/datum.dart';
+import 'package:artificial_lung/core/models/data.dart';
 import 'package:artificial_lung/core/viewmodels/storage_model.dart';
 import 'package:flutter/material.dart';
 

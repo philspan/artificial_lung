@@ -5,7 +5,7 @@ import 'package:artificial_lung/core/services/storage.dart';
 import 'package:artificial_lung/core/viewmodels/base_model.dart';
 import 'package:artificial_lung/locator.dart';
 
-import 'package:artificial_lung/core/models/datum.dart';
+import 'package:artificial_lung/core/models/data.dart';
 
 class StorageModel extends BaseModel {
   final Storage _storage = locator<Storage>();
@@ -13,7 +13,7 @@ class StorageModel extends BaseModel {
   // add functions to handle getting data from list indirectly
   Data dataList;
 
-  StorageModel () {
+  StorageModel() {
     readJSON();
   }
 
