@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:artificial_lung/core/enums/enums.dart';
-import 'package:artificial_lung/core/services/bluetooth.dart';
 import 'package:artificial_lung/core/services/navigation.dart';
 import 'package:artificial_lung/ui/views/layout_template/layout_template.dart';
 import 'package:artificial_lung/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:artificial_lung/locator.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   setupLocator();

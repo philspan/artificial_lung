@@ -10,7 +10,7 @@ GetIt locator = GetIt.I;
 
 void setupLocator() {
   locator.registerLazySingleton(() => NavigationService());
-  locator.registerLazySingleton(() => Storage(fileName: "text.txt"));
+  locator.registerLazySingleton(() => Storage(fileName: "testFile.json"));
   locator.registerLazySingleton(
       () => Bluetooth(deviceName: "", serviceUUID: "", characteristicUUID: ""));
 

@@ -43,10 +43,11 @@ class AirCard extends StatelessWidget {
               activeColor: CupertinoColors.activeGreen,
               onChanged: (changed) {
                 // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
+                // create a separate method call for adding values to stream
                 if (model.servoState != ServoRegulationStatus.Enabled)
                   changed
-                      ? model.setState(AirStatus.Enabled)
-                      : model.setState(AirStatus.Disabled);
+                      ? model.airStatusController.add(AirStatus.Enabled)
+                      : model.airStatusController.add(AirStatus.Disabled);
               },
             ),
             ListTile(
@@ -147,8 +148,8 @@ class FlowCard extends StatelessWidget {
                 // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
                 if (model.servoState != ServoRegulationStatus.Enabled)
                   changed
-                      ? model.setState(FlowStatus.Enabled)
-                      : model.setState(FlowStatus.Disabled);
+                      ? model.flowStatusController.add(FlowStatus.Enabled)
+                      : model.flowStatusController.add(FlowStatus.Disabled);
               },
             ),
             ListTile(
@@ -213,8 +214,8 @@ class CO2Card extends StatelessWidget {
                 // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
                 if (model.servoState != ServoRegulationStatus.Enabled)
                   changed
-                      ? model.co2StatusController.add(CO2Status.Enabled)
-                      : model.co2StatusController.add(CO2Status.Disabled);
+                      ? model.add(model.co2StatusController, CO2Status.Enabled)//model.co2StatusController.add(CO2Status.Enabled)
+                      : model.add(model.co2StatusController, CO2Status.Disabled);//model.co2StatusController.add(CO2Status.Disabled);
               },
             ),
             ListTile(

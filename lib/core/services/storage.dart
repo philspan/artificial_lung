@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:artificial_lung/core/models/datum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -39,23 +40,36 @@ class Storage extends ChangeNotifier {
     return writeData(await readData() + data);
   }
 
-// change to class object
-  Future<Map> readJSON() async {
+  Future<Data> readJSON() async {
     try {
-      final file = await localFile;
-      Map<String, dynamic> jsonContent = jsonDecode(file.readAsStringSync());
-      return jsonContent;
+      final jsonContent = jsonDecode(await readData());
+      return Data.fromJson(jsonContent);
     } catch (e) {
+      if (e is FileSystemException) {
+        print("FileSystemException error! Creating file...");
+        writeJSON(Data.initial());
+        return readJSON();
+      }
+      if (e is FormatException) {
+        print("FormatException error!");
+        writeJSON(Data.initial());
+        return readJSON();
+      }
+      if (e is TypeError) {
+        print("TypeError!");
+        writeJSON(Data.initial());
+        return readJSON();
+      }
       return e;
     }
   }
 
-// change to pass a Class type data eventually
-  Future<File> writeJSON(String key, dynamic value) async {
-    final file = await localFile;
-    Map<String, dynamic> toJson = <String, dynamic>{
-      '$key': value,
-    };
-    return file.writeAsString(jsonEncode(toJson), mode: FileMode.append);
+  Future<File> writeJSON(Data data) async {
+    try {
+      final file = await localFile;
+      return file.writeAsString(jsonEncode(data.data));
+    } catch (e) {
+      return null;
+    }
   }
 }

@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:artificial_lung/core/enums/enums.dart';
+import 'package:artificial_lung/core/models/datum.dart';
 import 'package:artificial_lung/core/viewmodels/base_model.dart';
+import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
+import 'package:artificial_lung/core/viewmodels/storage_model.dart';
+import 'package:artificial_lung/locator.dart';
 
 class SensorModel extends BaseModel {
   CO2Status _co2State;
@@ -52,7 +56,7 @@ class SensorModel extends BaseModel {
     // initialize as completely disabled
     // later, change to get current status from device
     // initState is called on application open
-    co2StatusController.add(CO2Status.Disabled); // need to change from factory to singleton, keeps creating new streams to listen to :(
+    co2StatusController.add(CO2Status.Disabled);
     flowStatusController.add(FlowStatus.Disabled);
     airStatusController.add(AirStatus.Disabled);
     servoStatusController.add(ServoRegulationStatus.Disabled);
@@ -67,12 +71,27 @@ class SensorModel extends BaseModel {
       _airState = sensorState;
     } else if (sensorState is ServoRegulationStatus) {
       if (sensorState == ServoRegulationStatus.Enabled) {
-        setState(CO2Status.Disabled);
-        setState(FlowStatus.Disabled);
-        setState(AirStatus.Disabled);
+        // new public function to use in order to use bluetooth sends
+        add(co2StatusController, CO2Status.Disabled);
+        add(flowStatusController, FlowStatus.Disabled);
+        add(airStatusController, AirStatus.Disabled);
+        // these bypass stream update
+        // setState(CO2Status.Disabled);
+        // setState(FlowStatus.Disabled);
+        // setState(AirStatus.Disabled);
+        // these keep stream in cycle
+        // co2StatusController.add(CO2Status.Disabled);
+        // flowStatusController.add(FlowStatus.Disabled);
+        // airStatusController.add(AirStatus.Disabled);
       }
       _servoState = sensorState;
     }
     notifyListeners();
+  }
+
+  // REQUIRES: state must be a registered state within the enum
+  void add(StreamController controller, state) {
+    controller.add(state);
+    locator<StorageModel>().writeJSON(Datum.value(15.0));
   }
 }

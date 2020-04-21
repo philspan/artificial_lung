@@ -2,6 +2,8 @@ import 'package:artificial_lung/ui/widgets/bluetooth_container.dart';
 import 'package:artificial_lung/ui/widgets/graph_container.dart';
 import 'package:flutter/material.dart';
 
+import 'package:artificial_lung/ui/widgets/test_button.dart';
+
 class HistoryView extends StatelessWidget {
   const HistoryView({Key key}) : super(key: key);
 
@@ -12,7 +14,7 @@ class HistoryView extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 42, 8, 8),
-          child: WelcomeContainer(),
+          child: TestButtonJSON(),
         ),
         GraphContainer(),
         AspectRatio(
@@ -34,7 +36,7 @@ class WelcomeContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
-      child: Text("", style: TextStyle(fontSize: 24)),
+      child: Text("Servoregulator", style: TextStyle(fontSize: 24)),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:artificial_lung/core/enums/enums.dart';
 import 'package:artificial_lung/core/services/storage.dart';
 import 'package:artificial_lung/core/viewmodels/sensor_model.dart';
+import 'package:artificial_lung/core/viewmodels/storage_model.dart';
 import 'package:artificial_lung/locator.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
 import 'package:artificial_lung/ui/widgets/base_widget.dart';
@@ -41,8 +42,8 @@ class ServoCard extends StatelessWidget {
               activeColor: CupertinoColors.activeGreen,
               onChanged: (changed) {
                 changed
-                    ? model.setState(ServoRegulationStatus.Enabled)
-                    : model.setState(ServoRegulationStatus.Disabled);
+                    ? model.add(model.servoStatusController,ServoRegulationStatus.Enabled)
+                    : model.add(model.servoStatusController,ServoRegulationStatus.Disabled);
               },
             ),
             ListTile(
@@ -63,7 +64,7 @@ class ServoCard extends StatelessWidget {
                   onSubmitted: (value) {
                     locator<Storage>().writeData(value);
                     locator<Storage>().readData().then((valFromFile) {
-                      //error = valFromFile;
+                      // error = valFromFile;
                     });
                   },
                 ),
@@ -77,7 +78,7 @@ class ServoCard extends StatelessWidget {
                 child: TextField(
                   enabled: false,
                   decoration: InputDecoration(
-                    labelText: "", //"${error != null ? error : 0} %",
+                    labelText: model.airState.toString(),//"${error != null ? error : 0} %",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
                       borderSide: BorderSide(),
