@@ -42,8 +42,10 @@ class ServoCard extends StatelessWidget {
               activeColor: CupertinoColors.activeGreen,
               onChanged: (changed) {
                 changed
-                    ? model.add(model.servoStatusController,ServoRegulationStatus.Enabled)
-                    : model.add(model.servoStatusController,ServoRegulationStatus.Disabled);
+                    ? model.add(model.servoStatusController,
+                        ServoRegulationStatus.Enabled)
+                    : model.add(model.servoStatusController,
+                        ServoRegulationStatus.Disabled);
               },
             ),
             ListTile(
@@ -75,16 +77,22 @@ class ServoCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .5,
                 heightFactor: .6,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    labelText: model.airState.toString(),//"${error != null ? error : 0} %",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                child: BaseWidget<StorageModel>(
+                  onModelReady: (model) => {},
+                  builder: (context, model, child) => TextField(
+                    controller: TextEditingController(
+                        text:
+                            "TODO"), // model.first.co2Level.toStringAsPrecision(4)),
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: "%",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
             ),
@@ -99,7 +107,7 @@ class PIDCard extends StatelessWidget {
   const PIDCard({
     Key key,
   }) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return BaseWidget<SensorModel>(
@@ -123,6 +131,11 @@ class PIDCard extends StatelessWidget {
                 widthFactor: .2,
                 heightFactor: .6,
                 child: TextField(
+                  controller: TextEditingController(
+                      text: locator<StorageModel>()
+                          .first
+                          .pGain
+                          .toStringAsPrecision(4)),
                   enabled: model.servoState == ServoRegulationStatus.Enabled,
                   decoration: InputDecoration(
                     labelText: "Value",
@@ -143,6 +156,11 @@ class PIDCard extends StatelessWidget {
                 heightFactor: .6,
                 child: TextField(
                   enabled: model.servoState == ServoRegulationStatus.Enabled,
+                  controller: TextEditingController(
+                      text: locator<StorageModel>()
+                          .first
+                          .iGain
+                          .toStringAsPrecision(4)),
                   decoration: InputDecoration(
                     labelText: "Value",
                     border: OutlineInputBorder(
@@ -161,6 +179,11 @@ class PIDCard extends StatelessWidget {
                 heightFactor: .6,
                 child: TextField(
                   enabled: model.servoState == ServoRegulationStatus.Enabled,
+                  controller: TextEditingController(
+                      text: locator<StorageModel>()
+                          .first
+                          .dGain
+                          .toStringAsPrecision(4)),
                   decoration: InputDecoration(
                     labelText: "Value",
                     border: OutlineInputBorder(

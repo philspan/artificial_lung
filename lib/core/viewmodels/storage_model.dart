@@ -17,6 +17,10 @@ class StorageModel extends BaseModel {
     readJSON();
   }
 
+  Datum get first {
+    return dataList.data.first;
+  }
+
   Future<String> readData() async {
     setState(ViewState.Busy);
     var success = await _storage.readData();

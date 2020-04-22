@@ -1,5 +1,7 @@
 import 'package:artificial_lung/core/enums/enums.dart';
 import 'package:artificial_lung/core/viewmodels/sensor_model.dart';
+import 'package:artificial_lung/core/viewmodels/storage_model.dart';
+import 'package:artificial_lung/locator.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
 import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,16 +57,22 @@ class AirCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .2,
                 heightFactor: .6,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    labelText: "A",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                child: BaseWidget<StorageModel>(
+                  onModelReady: (model) => {},
+                  builder: (context, model, child) => TextField(
+                    controller: TextEditingController(
+                        text: model.first.voltage
+                            .toStringAsPrecision(4)),
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: "A",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
             ),
@@ -73,16 +81,22 @@ class AirCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .2,
                 heightFactor: .6,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    labelText: "V",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                child: BaseWidget<StorageModel>(
+                  onModelReady: (model) => {},
+                  builder: (context, model, child) => TextField(
+                    controller: TextEditingController(
+                        text: model.first.voltage
+                            .toStringAsPrecision(4)),
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: "V",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
             ),
@@ -91,16 +105,22 @@ class AirCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .2,
                 heightFactor: .6,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    labelText: "W",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                child: BaseWidget<StorageModel>(
+                  onModelReady: (model) => {},
+                  builder: (context, model, child) => TextField(
+                    controller: TextEditingController(
+                        text: model.first.power
+                            .toStringAsPrecision(4)),
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: "W",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
             ),
@@ -109,15 +129,21 @@ class AirCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .2,
                 heightFactor: .6,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                child: BaseWidget<StorageModel>(
+                  onModelReady: (model) => {},
+                  builder: (context, model, child) => TextField(
+                    controller: TextEditingController(
+                        text: "TODO"), // model.first.flowLevel
+                    // .toStringAsPrecision(4)),
+                    enabled: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
             ),
@@ -157,16 +183,22 @@ class FlowCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .2,
                 heightFactor: .6,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    labelText: "V",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                child: BaseWidget<StorageModel>(
+                  onModelReady: (model) => {},
+                  builder: (context, model, child) => TextField(
+                    controller: TextEditingController(
+                        text: model.first.voltage
+                            .toStringAsPrecision(4)),
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: "V",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
             ),
@@ -175,15 +207,21 @@ class FlowCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .2,
                 heightFactor: .6,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                child: BaseWidget<StorageModel>(
+                  onModelReady: (model) => {},
+                  builder: (context, model, child) => TextField(
+                    controller: TextEditingController(
+                        text: model.first.flowLevel
+                            .toStringAsPrecision(4)),
+                    enabled: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
             ),
@@ -214,8 +252,11 @@ class CO2Card extends StatelessWidget {
                 // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
                 if (model.servoState != ServoRegulationStatus.Enabled)
                   changed
-                      ? model.add(model.co2StatusController, CO2Status.Enabled)//model.co2StatusController.add(CO2Status.Enabled)
-                      : model.add(model.co2StatusController, CO2Status.Disabled);//model.co2StatusController.add(CO2Status.Disabled);
+                      ? model.add(model.co2StatusController, CO2Status.Enabled)
+                      //model.co2StatusController.add(CO2Status.Enabled)
+                      : model.add(
+                          model.co2StatusController, CO2Status.Disabled);
+                //model.co2StatusController.add(CO2Status.Disabled);
               },
             ),
             ListTile(
@@ -223,16 +264,22 @@ class CO2Card extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .2,
                 heightFactor: .6,
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    labelText: "%",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                child: BaseWidget<StorageModel>(
+                  onModelReady: (model) => {},
+                  builder: (context, model, child) => TextField(
+                    controller: TextEditingController(
+                        text: model.first.co2Level
+                            .toStringAsPrecision(4)),
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: "%",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.numberWithOptions(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(),
                 ),
               ),
             ),
