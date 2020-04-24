@@ -55,10 +55,10 @@ class SensorModel extends BaseModel {
     // initialize as completely disabled
     // later, change to get current status from device
     // initState is called on application open
-    co2StatusController.add(CO2Status.Disabled);
-    flowStatusController.add(FlowStatus.Disabled);
-    airStatusController.add(AirStatus.Disabled);
-    servoStatusController.add(ServoRegulationStatus.Disabled);
+    add(co2StatusController, (locator<StorageModel>().first.co2Level == 15.0) ? CO2Status.Enabled : CO2Status.Disabled);
+    add(flowStatusController, (locator<StorageModel>().first.co2Level == 15.0) ? FlowStatus.Enabled : FlowStatus.Disabled);
+    add(airStatusController, (locator<StorageModel>().first.co2Level == 15.0) ? AirStatus.Enabled : AirStatus.Disabled);
+    add(servoStatusController, (locator<StorageModel>().first.co2Level == 0.0) ? ServoRegulationStatus.Enabled : ServoRegulationStatus.Disabled);
   }
 
   void setState(sensorState) {
@@ -89,8 +89,10 @@ class SensorModel extends BaseModel {
   }
 
   // REQUIRES: state must be a registered state within the enum
+  // EFFECTS: pushes state onto controller and writes new Datum to file.
   void add(StreamController controller, state) {
     controller.add(state);
+    // add state, send data thru bluetooth, call readJSON after each update
     locator<StorageModel>().writeJSON(Datum.value(15.0));
   }
 }

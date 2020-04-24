@@ -11,7 +11,8 @@ class StorageModel extends BaseModel {
   final Storage _storage = locator<Storage>();
 
   // add functions to handle getting data from list indirectly
-  Data dataList;
+  // possibly change to a stream of Data
+  Data dataList = Data.initial();
 
   StorageModel() {
     readJSON();

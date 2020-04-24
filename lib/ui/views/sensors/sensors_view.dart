@@ -61,8 +61,7 @@ class AirCard extends StatelessWidget {
                   onModelReady: (model) => {},
                   builder: (context, model, child) => TextField(
                     controller: TextEditingController(
-                        text: model.first.voltage
-                            .toStringAsPrecision(4)),
+                        text: model.first.voltage.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "A",
@@ -85,8 +84,7 @@ class AirCard extends StatelessWidget {
                   onModelReady: (model) => {},
                   builder: (context, model, child) => TextField(
                     controller: TextEditingController(
-                        text: model.first.voltage
-                            .toStringAsPrecision(4)),
+                        text: model.first.voltage.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "V",
@@ -109,8 +107,7 @@ class AirCard extends StatelessWidget {
                   onModelReady: (model) => {},
                   builder: (context, model, child) => TextField(
                     controller: TextEditingController(
-                        text: model.first.power
-                            .toStringAsPrecision(4)),
+                        text: model.first.power.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "W",
@@ -187,8 +184,7 @@ class FlowCard extends StatelessWidget {
                   onModelReady: (model) => {},
                   builder: (context, model, child) => TextField(
                     controller: TextEditingController(
-                        text: model.first.voltage
-                            .toStringAsPrecision(4)),
+                        text: model.first.voltage.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "V",
@@ -211,8 +207,7 @@ class FlowCard extends StatelessWidget {
                   onModelReady: (model) => {},
                   builder: (context, model, child) => TextField(
                     controller: TextEditingController(
-                        text: model.first.flowLevel
-                            .toStringAsPrecision(4)),
+                        text: model.first.flowLevel.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -252,7 +247,8 @@ class CO2Card extends StatelessWidget {
                 // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
                 if (model.servoState != ServoRegulationStatus.Enabled)
                   changed
-                      ? model.add(model.co2StatusController, CO2Status.Enabled)
+                      ? model.add(
+                          model.co2StatusController, CO2Status.Enabled) // TODO
                       //model.co2StatusController.add(CO2Status.Enabled)
                       : model.add(
                           model.co2StatusController, CO2Status.Disabled);
@@ -268,8 +264,7 @@ class CO2Card extends StatelessWidget {
                   onModelReady: (model) => {},
                   builder: (context, model, child) => TextField(
                     controller: TextEditingController(
-                        text: model.first.co2Level
-                            .toStringAsPrecision(4)),
+                        text: model.first.co2Level.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "%",
