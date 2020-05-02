@@ -22,7 +22,7 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
       builder: (context, model, child) => Scaffold(
         bottomNavigationBar: CupertinoTabBar(
           currentIndex: _currentIndex,
-          activeColor: CupertinoColors.activeBlue,
+          activeColor: Color.fromARGB(255, 0, 39, 76),
           onTap: (int value) {
             if (_currentIndex != value) {
               setState(() {

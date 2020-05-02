@@ -1,12 +1,14 @@
 import 'package:artificial_lung/ui/views/history/history_view.dart';
 import 'package:artificial_lung/ui/views/sensors/sensors_view.dart';
 import 'package:artificial_lung/ui/views/servoregulation/servoregulation_view.dart';
+import 'package:artificial_lung/ui/views/startup/startup_view.dart';
 import 'package:flutter/material.dart';
 
 // define routes
 const String HistoryRoute = '/history';
 const String SensorsRoute = '/sensors';
 const String ServoRegulationRoute = '/servoregulation';
+const String StartupRoute = '/initial';
 
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -23,6 +25,8 @@ class NavigationService {
 Route<dynamic> generateRoute(RouteSettings settings) {
   print(settings.name);
   switch (settings.name) {
+    case StartupRoute:
+      return MaterialPageRoute(builder: (context) => StartupView());
     case HistoryRoute:
       return MaterialPageRoute(builder: (context) => HistoryView());
     // return _getPageRoute(HomeView(), settings);
