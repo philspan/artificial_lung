@@ -40,8 +40,7 @@ class StorageModel extends BaseModel {
     setState(ViewState.Busy);
     dataList = await _storage.readJSON();
     setState(ViewState.Idle);
-    print(dataList.data[0].co2Level);
-    print(dataList.data.length);
+    notifyListeners();
     return dataList;
   }
 

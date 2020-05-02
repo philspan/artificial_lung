@@ -1,7 +1,6 @@
 import 'package:artificial_lung/core/enums/enums.dart';
 import 'package:artificial_lung/core/viewmodels/sensor_model.dart';
 import 'package:artificial_lung/core/viewmodels/storage_model.dart';
-import 'package:artificial_lung/locator.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
 import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,7 +54,7 @@ class AirCard extends StatelessWidget {
             ListTile(
               title: Text("Current (A)"),
               trailing: FractionallySizedBox(
-                widthFactor: .2,
+                widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
                   onModelReady: (model) => {},
@@ -78,7 +77,7 @@ class AirCard extends StatelessWidget {
             ListTile(
               title: Text("Voltage (V)"),
               trailing: FractionallySizedBox(
-                widthFactor: .2,
+                widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
                   onModelReady: (model) => {},
@@ -101,7 +100,7 @@ class AirCard extends StatelessWidget {
             ListTile(
               title: Text("Power (W)"),
               trailing: FractionallySizedBox(
-                widthFactor: .2,
+                widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
                   onModelReady: (model) => {},
@@ -124,7 +123,7 @@ class AirCard extends StatelessWidget {
             ListTile(
               title: Text("Estimated Flow (SLPM)"),
               trailing: FractionallySizedBox(
-                widthFactor: .2,
+                widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
                   onModelReady: (model) => {},
@@ -178,7 +177,7 @@ class FlowCard extends StatelessWidget {
             ListTile(
               title: Text("Voltage (V)"),
               trailing: FractionallySizedBox(
-                widthFactor: .2,
+                widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
                   onModelReady: (model) => {},
@@ -201,7 +200,7 @@ class FlowCard extends StatelessWidget {
             ListTile(
               title: Text("Flow (LPM)"),
               trailing: FractionallySizedBox(
-                widthFactor: .2,
+                widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
                   onModelReady: (model) => {},
@@ -258,7 +257,7 @@ class CO2Card extends StatelessWidget {
             ListTile(
               title: Text("CO\u2082 (%)"),
               trailing: FractionallySizedBox(
-                widthFactor: .2,
+                widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
                   onModelReady: (model) => {},

@@ -22,10 +22,17 @@ class BluetoothConnectionContainer extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Icon(Icons.bluetooth, size: 72),
+                  Icon(
+                    Icons.bluetooth,
+                    size: 72,
+                    color: Color.fromARGB(255, 0, 39, 76),
+                  ),
                   Text(
                     'Bluetooth Status',
-                    style: TextStyle(fontSize: 24),
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Color.fromARGB(255, 0, 39, 76),
+                    ),
                   ),
                 ],
               ),

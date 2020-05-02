@@ -121,9 +121,15 @@ class Bluetooth {
     });
   }
 
-  writeData(String data) async {
+  Future<Null> writeData(String data) async {
     if (targetCharacteristic == null) return;
     List<int> bytes = utf8.encode(data);
     await targetCharacteristic.write(bytes);
+  }
+
+  String readData(List<int> bytes) {
+    // possibly throw error and wrap reading in try catch
+    if (targetCharacteristic == null) return "";
+    return utf8.decode(bytes);
   }
 }

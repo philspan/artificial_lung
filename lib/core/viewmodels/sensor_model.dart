@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:artificial_lung/core/enums/enums.dart';
-import 'package:artificial_lung/core/models/data.dart';
 import 'package:artificial_lung/core/viewmodels/base_model.dart';
+import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
 import 'package:artificial_lung/core/viewmodels/storage_model.dart';
 import 'package:artificial_lung/locator.dart';
 
@@ -55,6 +55,8 @@ class SensorModel extends BaseModel {
     // initialize as completely disabled
     // later, change to get current status from device
     // initState is called on application open
+    
+    // change these to locator<StorageModel>.first.co2State == true for each state
     add(co2StatusController, (locator<StorageModel>().first.co2Level == 15.0) ? CO2Status.Enabled : CO2Status.Disabled);
     add(flowStatusController, (locator<StorageModel>().first.co2Level == 15.0) ? FlowStatus.Enabled : FlowStatus.Disabled);
     add(airStatusController, (locator<StorageModel>().first.co2Level == 15.0) ? AirStatus.Enabled : AirStatus.Disabled);
@@ -93,6 +95,14 @@ class SensorModel extends BaseModel {
   void add(StreamController controller, state) {
     controller.add(state);
     // add state, send data thru bluetooth, call readJSON after each update
-    locator<StorageModel>().writeJSON(Datum.value(15.0));
+    // locator<StorageModel>().writeJSON(Datum.value(15.0));
+    //TODO convert data to be sent to string
+    //TODO add data to bluetooth sendData controller
+  }
+
+  //TODO change function name? to better suit
+  // used for changing PID controls and target co2, anything allowing for numeric changes sent via bt
+  void sendData(String data) {
+    locator<BluetoothModel>().dataSendController.add(data);
   }
 }
