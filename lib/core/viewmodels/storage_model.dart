@@ -10,7 +10,6 @@ import 'package:artificial_lung/core/models/data.dart';
 class StorageModel extends BaseModel {
   final Storage _storage = locator<Storage>();
 
-  // add functions to handle getting data from list indirectly
   // possibly change to a stream of Data
   Data dataList = Data.initial();
 
@@ -18,6 +17,8 @@ class StorageModel extends BaseModel {
     readJSON();
   }
 
+  // add functions to handle getting data from list indirectly
+  // TODO create getters for parts of data, rather than requiring use of dot operator
   Datum get first {
     return dataList.data.first;
   }

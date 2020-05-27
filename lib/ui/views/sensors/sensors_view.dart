@@ -1,6 +1,5 @@
-import 'package:artificial_lung/core/enums/enums.dart';
-import 'package:artificial_lung/core/viewmodels/sensor_model.dart';
 import 'package:artificial_lung/core/viewmodels/storage_model.dart';
+import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
 import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,34 +32,34 @@ class AirCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<SensorModel>(
-      onModelReady: (model) => {},
-      builder: (context, model, child) => Card(
-        child: Column(
-          children: <Widget>[
-            AdaptiveSwitchListTile(
-              title: Text("Air Pump Control"),
-              value: (model.airState == AirStatus.Enabled),
-              activeColor: CupertinoColors.activeGreen,
-              onChanged: (changed) {
-                // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
-                // create a separate method call for adding values to stream
-                if (model.servoState != ServoRegulationStatus.Enabled)
+    return BaseWidget<BluetoothModel>(
+      onModelReady: (bluetooth) => {},
+      builder: (context, bluetooth, child) => BaseWidget<StorageModel>(
+        onModelReady: (storage) => {},
+        builder: (context, storage, child) => Card(
+          child: Column(
+            children: <Widget>[
+              AdaptiveSwitchListTile(
+                title: Text("Air Pump Control"),
+                value: storage.first.airState,
+                activeColor: CupertinoColors.activeGreen,
+                onChanged: (changed) {
+                  // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
+                  // create a separate method call for adding values to stream
+                  // if (model.first.servoState != ServoRegulationStatus.Enabled)
                   changed
-                      ? model.airStatusController.add(AirStatus.Enabled)
-                      : model.airStatusController.add(AirStatus.Disabled);
-              },
-            ),
-            ListTile(
-              title: Text("Current (A)"),
-              trailing: FractionallySizedBox(
-                widthFactor: .225,
-                heightFactor: .6,
-                child: BaseWidget<StorageModel>(
-                  onModelReady: (model) => {},
-                  builder: (context, model, child) => TextField(
+                      ? bluetooth.dataSendController.add("air state : true")
+                      : bluetooth.dataSendController.add("air state : false");
+                },
+              ),
+              ListTile(
+                title: Text("Current (A)"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .225,
+                  heightFactor: .6,
+                  child: TextField(
                     controller: TextEditingController(
-                        text: model.first.voltage.toStringAsPrecision(4)),
+                        text: storage.first.voltage.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "A",
@@ -73,17 +72,14 @@ class AirCard extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Text("Voltage (V)"),
-              trailing: FractionallySizedBox(
-                widthFactor: .225,
-                heightFactor: .6,
-                child: BaseWidget<StorageModel>(
-                  onModelReady: (model) => {},
-                  builder: (context, model, child) => TextField(
+              ListTile(
+                title: Text("Voltage (V)"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .225,
+                  heightFactor: .6,
+                  child: TextField(
                     controller: TextEditingController(
-                        text: model.first.voltage.toStringAsPrecision(4)),
+                        text: storage.first.voltage.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "V",
@@ -96,17 +92,14 @@ class AirCard extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Text("Power (W)"),
-              trailing: FractionallySizedBox(
-                widthFactor: .225,
-                heightFactor: .6,
-                child: BaseWidget<StorageModel>(
-                  onModelReady: (model) => {},
-                  builder: (context, model, child) => TextField(
+              ListTile(
+                title: Text("Power (W)"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .225,
+                  heightFactor: .6,
+                  child: TextField(
                     controller: TextEditingController(
-                        text: model.first.power.toStringAsPrecision(4)),
+                        text: storage.first.power.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "W",
@@ -119,15 +112,12 @@ class AirCard extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Text("Estimated Flow (SLPM)"),
-              trailing: FractionallySizedBox(
-                widthFactor: .225,
-                heightFactor: .6,
-                child: BaseWidget<StorageModel>(
-                  onModelReady: (model) => {},
-                  builder: (context, model, child) => TextField(
+              ListTile(
+                title: Text("Estimated Flow (SLPM)"),
+                trailing: FractionallySizedBox(
+                  widthFactor: .225,
+                  heightFactor: .6,
+                  child: TextField(
                     controller: TextEditingController(
                         text: "TODO"), // model.first.flowLevel
                     // .toStringAsPrecision(4)),
@@ -142,8 +132,8 @@ class AirCard extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -157,22 +147,25 @@ class FlowCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<SensorModel>(
-      onModelReady: (model) => {},
-      builder: (context, model, child) => Card(
+    return BaseWidget<BluetoothModel>(
+      onModelReady: (bluetooth) => {},
+      builder: (context, bluetooth, child) => Card(
         child: Column(
           children: <Widget>[
-            AdaptiveSwitchListTile(
-              title: Text("Flow Sensor"),
-              value: (model.flowState == FlowStatus.Enabled),
-              activeColor: CupertinoColors.activeGreen,
-              onChanged: (changed) {
-                // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
-                if (model.servoState != ServoRegulationStatus.Enabled)
-                  changed
-                      ? model.flowStatusController.add(FlowStatus.Enabled)
-                      : model.flowStatusController.add(FlowStatus.Disabled);
-              },
+            BaseWidget<StorageModel>(
+              onModelReady: (storage) => {},
+              builder: (context, storage, child) => AdaptiveSwitchListTile(
+                title: Text("Flow Sensor"),
+                value: (storage.first.flowState),
+                activeColor: CupertinoColors.activeGreen,
+                onChanged: (changed) {
+                  // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
+                  if (storage.first.sysMode != 1)
+                    changed
+                        ? bluetooth.dataSendController.add("flow state : true")
+                        : bluetooth.dataSendController.add("flow state : false");
+                },
+              ),
             ),
             ListTile(
               title: Text("Voltage (V)"),
@@ -180,10 +173,10 @@ class FlowCard extends StatelessWidget {
                 widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
-                  onModelReady: (model) => {},
-                  builder: (context, model, child) => TextField(
+                  onModelReady: (storage) => {},
+                  builder: (context, storage, child) => TextField(
                     controller: TextEditingController(
-                        text: model.first.voltage.toStringAsPrecision(4)),
+                        text: storage.first.voltage.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       labelText: "V",
@@ -203,10 +196,10 @@ class FlowCard extends StatelessWidget {
                 widthFactor: .225,
                 heightFactor: .6,
                 child: BaseWidget<StorageModel>(
-                  onModelReady: (model) => {},
-                  builder: (context, model, child) => TextField(
+                  onModelReady: (storage) => {},
+                  builder: (context, storage, child) => TextField(
                     controller: TextEditingController(
-                        text: model.first.flowLevel.toStringAsPrecision(4)),
+                        text: storage.first.flowLevel.toStringAsPrecision(4)),
                     enabled: false,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -233,26 +226,28 @@ class CO2Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<SensorModel>(
-      onModelReady: (model) => {},
-      builder: (context, model, child) => Card(
+    return BaseWidget<BluetoothModel>(
+      onModelReady: (bluetooth) => {},
+      builder: (context, bluetooth, child) => Card(
         child: Column(
           children: <Widget>[
-            AdaptiveSwitchListTile(
-              title: Text("CO\u2082 Sensor"),
-              value: (model.co2State == CO2Status.Enabled),
-              activeColor: CupertinoColors.activeGreen,
-              onChanged: (changed) {
-                // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
-                if (model.servoState != ServoRegulationStatus.Enabled)
-                  changed
-                      ? model.add(
-                          model.co2StatusController, CO2Status.Enabled) // TODO
-                      //model.co2StatusController.add(CO2Status.Enabled)
-                      : model.add(
-                          model.co2StatusController, CO2Status.Disabled);
-                //model.co2StatusController.add(CO2Status.Disabled);
-              },
+            BaseWidget<StorageModel>(
+              onModelReady: (storage) => {},
+              builder: (context, storage, child) => AdaptiveSwitchListTile(
+                title: Text("CO\u2082 Sensor"),
+                value: (storage.first.co2State),
+                activeColor: CupertinoColors.activeGreen,
+                onChanged: (changed) {
+                  // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
+                  if (storage.first.sysMode != 1)
+                    changed
+                        ? bluetooth.dataSendController.add("co2 state : true") // TODO
+                        //model.co2StatusController.add(CO2Status.Enabled)
+                        : bluetooth.dataSendController
+                            .add("co2 state : false");
+                  //model.co2StatusController.add(CO2Status.Disabled);
+                },
+              ),
             ),
             ListTile(
               title: Text("CO\u2082 (%)"),
