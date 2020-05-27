@@ -48,8 +48,8 @@ class ServoCard extends StatelessWidget {
                   //         ServoRegulationStatus.Disabled);
 
                   changed
-                      ? bluetooth.dataSendController.add("sysMode : 0")
-                      : bluetooth.dataSendController.add("sysMode : 1");
+                      ? bluetooth.dataSendController.add("system mode : 1")
+                      : bluetooth.dataSendController.add("system mode : 0");
                 },
               ),
               ListTile(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:core';
 
 import 'package:artificial_lung/core/enums/enums.dart';
 import 'package:artificial_lung/core/models/data.dart';
@@ -50,8 +51,9 @@ class BluetoothModel extends BaseModel {
     //TODO check for null data string first
     List<String> pair = data.split(" : "); // key,value
     String key = pair.first;
-    double value = double.parse(pair.last);
-
+    dynamic value = (key.contains("state") ? (pair.last == "true") : double.parse(pair.last)); 
+    if (key.contains("system mode")) value = int.parse(pair.last);
+      
     if (pair.length > 2) {
       print("error: onDataReceive passed incorrectly formatted string");
       return;
