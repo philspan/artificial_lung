@@ -26,6 +26,10 @@ class Datum {
   double pGain;
   double iGain;
   double dGain;
+  bool co2State;
+  bool flowState;
+  bool airState;
+  int sysMode;
 
   Datum(
       {this.co2Level,
@@ -36,7 +40,11 @@ class Datum {
       this.power,
       this.pGain,
       this.iGain,
-      this.dGain});
+      this.dGain,
+      this.co2State,
+      this.flowState,
+      this.airState,
+      this.sysMode});
 
   Datum.initial()
       : co2Level = 0,
@@ -47,7 +55,11 @@ class Datum {
         power = 0,
         pGain = 0,
         iGain = 0,
-        dGain = 0;
+        dGain = 0,
+        co2State = true,
+        flowState = true,
+        airState = true,
+        sysMode = 0;
 
   // experimental
   Datum.value(value)
@@ -59,7 +71,11 @@ class Datum {
         power = value,
         pGain = value,
         iGain = value,
-        dGain = value;
+        dGain = value,
+        co2State = true,
+        flowState = true,
+        airState = true,
+        sysMode = 0;
 
   factory Datum.fromJson(Map<String, dynamic> json) {
     return new Datum(
@@ -72,6 +88,10 @@ class Datum {
       pGain: json['Proportional gain'],
       iGain: json['Integral gain'],
       dGain: json['Derivative gain'],
+      co2State: json['co2 state'],
+      flowState: json['flow state'],
+      airState: json['air state'],
+      sysMode: json['system mode'],
     );
   }
 
@@ -85,5 +105,9 @@ class Datum {
         'Proportional gain': pGain,
         'Integral gain': iGain,
         'Derivative gain': dGain,
+        'co2 state': co2State,
+        'flow state': flowState,
+        'air state': airState,
+        'system mode': sysMode, 
       };
 }
