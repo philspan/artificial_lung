@@ -56,9 +56,9 @@ class Datum {
         pGain = 0,
         iGain = 0,
         dGain = 0,
-        co2State = true,
-        flowState = true,
-        airState = true,
+        co2State = false,
+        flowState = false,
+        airState = false,
         sysMode = 0;
 
   // experimental
