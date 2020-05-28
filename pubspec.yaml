@@ -19,9 +19,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_blue: ^0.6.1 # ^0.6.3
-  cupertino_icons: ^0.1.2
-  provider: ^4.0.4
+  flutter_blue: # ^0.6.1 # ^0.6.3
+  cupertino_icons:
+  provider:
   get_it:
   path_provider:
   bezier_chart: "^1.0.16"
