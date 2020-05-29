@@ -20,7 +20,7 @@ class Storage extends ChangeNotifier {
     return File('$path/$fileName');
   }
 
-  Future<String> readData() async {
+  Future<String> _readStringFromFile() async {
     try {
       final file = await localFile;
       String body = await file.readAsString();
@@ -31,45 +31,53 @@ class Storage extends ChangeNotifier {
     }
   }
 
-  Future<File> writeData(String data) async {
+  Future<File> _writeStringToFile(String data) async {
     final file = await localFile;
     return file.writeAsString("$data");
   }
 
-  Future<File> appendData(String data) async {
-    return writeData(await readData() + data);
+  Future<File> _appendStringToFile(String data) async {
+    return _writeStringToFile(await _readStringFromFile() + data);
   }
 
-  Future<Data> readJSON() async {
+  Future<List<Datum>> readDataFromFile() async {
     try {
-      final jsonContent = jsonDecode(await readData());
-      return Data.fromJson(jsonContent);
+      final jsonContent = jsonDecode(await _readStringFromFile());
+      List<Datum> data = jsonContent.map((i) => Datum.fromJson(i)).toList();
+      return data;
     } catch (e) {
       if (e is FileSystemException) {
         print("FileSystemException error! Creating file...");
-        writeJSON(Data.initial());
-        return readJSON();
+        // writeDataToFile(Data.initial());
+        return readDataFromFile();
       }
       if (e is FormatException) {
         print("FormatException error!");
-        writeJSON(Data.initial());
-        return readJSON();
+        // writeDataToFile(Data.initial());
+        return readDataFromFile();
       }
       if (e is TypeError) {
         print("TypeError!");
-        writeJSON(Data.initial());
-        return readJSON();
+        // writeDataToFile(Data.initial());
+        return readDataFromFile();
       }
       return e;
     }
   }
 
-  Future<File> writeJSON(Data data) async {
+  Future<File> writeDataToFile(List<Datum> data) async {
     try {
       final file = await localFile;
-      return file.writeAsString(jsonEncode(data.data));
+      return file.writeAsString(jsonEncode(data));
     } catch (e) {
       return null;
     }
+  }
+
+  Future<File> appendDatumToFile(Datum datum) async {
+    var currentData = await readDataFromFile();
+    currentData.insert(0, datum);
+    var file = await writeDataToFile(currentData);
+    return file;
   }
 }
