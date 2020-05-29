@@ -1,5 +1,5 @@
 import 'dart:core';
-
+/*
 class Data {
   final List<Datum> data;
   Data({
@@ -15,7 +15,7 @@ class Data {
     return new Data(data: data);
   }
 }
-
+*/
 class Datum {
   double co2Level;
   double flowLevel;
