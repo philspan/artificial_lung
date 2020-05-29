@@ -1,21 +1,5 @@
 import 'dart:core';
-/*
-class Data {
-  final List<Datum> data;
-  Data({
-    this.data,
-  });
 
-  Data.initial() : data = [Datum.initial()];
-  Data.value(value) : data = [Datum.value(value)];
-
-  factory Data.fromJson(List<dynamic> parsedJson) {
-    List<Datum> data = new List<Datum>();
-    data = parsedJson.map((i) => Datum.fromJson(i)).toList();
-    return new Data(data: data);
-  }
-}
-*/
 class Datum {
   double co2Level;
   double flowLevel;
@@ -108,6 +92,6 @@ class Datum {
         'co2 state': co2State,
         'flow state': flowState,
         'air state': airState,
-        'system mode': sysMode, 
+        'system mode': sysMode,
       };
 }
