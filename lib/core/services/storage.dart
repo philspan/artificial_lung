@@ -42,7 +42,7 @@ class Storage extends ChangeNotifier {
 
   Future<List<Datum>> readDataFromFile() async {
     try {
-      final jsonContent = jsonDecode(await _readStringFromFile());
+      final List jsonContent = jsonDecode(await _readStringFromFile());
       List<Datum> data = jsonContent.map((i) => Datum.fromJson(i)).toList();
       return data;
     } catch (e) {
