@@ -11,6 +11,10 @@ class DataService {
 
   bool get hasData => _data != null && _data.isNotEmpty;
 
+  DataService() {
+    fetchData();
+  }
+
   // add functions to handle getting data from list indirectly
   // TODO create getters for parts of data, rather than requiring use of dot operator
   Datum get first {

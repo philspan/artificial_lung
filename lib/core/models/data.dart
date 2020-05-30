@@ -1,6 +1,8 @@
 import 'dart:core';
 
 class Datum {
+  //TODO add targetCo2, timestamp, battery level
+
   double co2Level;
   double flowLevel;
   double dutyCycle;
