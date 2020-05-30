@@ -1,5 +1,4 @@
-import 'package:artificial_lung/core/viewmodels/storage_model.dart';
-import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
+import 'package:artificial_lung/core/viewmodels/servoregulation_viewmodel.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
 import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,99 +27,79 @@ class ServoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<BluetoothModel>(
-      onModelReady: (bluetooth) => {},
-      builder: (context, bluetooth, child) => BaseWidget<StorageModel>(
-        onModelReady: (storage) => {},
-        builder: (context, storage, child) => Card(
-          child: Column(
-            children: <Widget>[
-              AdaptiveSwitchListTile(
-                title: Text("CO\u2082 Servo Regulation"),
-                value: storage.first.sysMode == 1,
-                activeColor: CupertinoColors.activeGreen,
-                onChanged: (changed) {
-                  //TODO
-                  // changed
-                  //     ? model.add(model.servoStatusController,
-                  //         ServoRegulationStatus.Enabled)
-                  //     : model.add(model.servoStatusController,
-                  //         ServoRegulationStatus.Disabled);
-
-                  changed
-                      ? bluetooth.dataSendController.add("system mode : 1")
-                      : bluetooth.dataSendController.add("system mode : 0");
-                },
-              ),
-              ListTile(
-                title: Text("Target CO\u2082 (%)"),
-                trailing: FractionallySizedBox(
-                  widthFactor: .225,
-                  heightFactor: .6,
-                  child: BaseWidget<StorageModel>(
-                    onModelReady: (storage) => {},
-                    builder: (context, storage, child) => TextField(
-                      controller: TextEditingController(
-                          text: storage.first
-                              .co2Level //TODO change to .targetCO2 after adding to data structure (Navid)
-                              .toStringAsPrecision(4)),
-                      enabled: storage.first.sysMode == 1,
-                      decoration: InputDecoration(
-                        labelText: "%",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
-                      ),
-                      keyboardType: TextInputType.numberWithOptions(
-                          decimal: true, signed: false),
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter(
-                            RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
-                      ],
-                      onSubmitted: (value) {
-                        print("sending CO2 level...");
-                        if (value != "")
-                          bluetooth.dataSendController
-                              .add("CO2 level : ${double.parse(value)}");
-                        print("sent");
-                        //TODO change false to what error handling should be
-                        //TODO add targetCo2 into data structure
-                      },
+    return BaseWidget<ServoRegulationViewModel>(
+      onModelReady: (model) => {},
+      builder: (context, model, child) => Card(
+        child: Column(
+          children: <Widget>[
+            AdaptiveSwitchListTile(
+              title: Text("CO\u2082 Servo Regulation"),
+              value: model.systemMode == 1,
+              activeColor: CupertinoColors.activeGreen,
+              onChanged: (changed) {
+                changed
+                    ? model.enableServoregulation()
+                    : model.enableFlowControl();
+              },
+            ),
+            ListTile(
+              title: Text("Target CO\u2082 (%)"),
+              trailing: FractionallySizedBox(
+                widthFactor: .225,
+                heightFactor: .6,
+                child: TextField(
+                  controller: TextEditingController(
+                      text: model
+                          .co2Level //TODO change to .targetCO2 after adding to data structure (Navid)
+                          .toStringAsPrecision(4)),
+                  enabled: model.systemMode == 1,
+                  decoration: InputDecoration(
+                    labelText: "%",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
                     ),
                   ),
+                  keyboardType: TextInputType.numberWithOptions(
+                      decimal: true, signed: false),
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter(
+                        RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
+                  ],
+                  onSubmitted: (value) {
+                    print("sending target CO2 level...");
+                    model.updateTargetCO2Level(value);
+                    print("sent");
+                  },
                 ),
               ),
-              ListTile(
-                title: Text("Error (%)"),
-                trailing: FractionallySizedBox(
-                  widthFactor: .5,
-                  heightFactor: .6,
-                  child: BaseWidget<StorageModel>(
-                    onModelReady: (storage) => {},
-                    builder: (context, storage, child) => TextField(
-                      controller: TextEditingController(text: "TODO"),
-                      // storage.first.co2Level.toStringAsPrecision(4)), TODO
-                      enabled: false,
-                      decoration: InputDecoration(
-                        labelText: "%",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
-                        ),
-                      ),
-                      keyboardType: TextInputType.numberWithOptions(
-                          decimal: true, signed: false),
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter(
-                            RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
-                      ],
+            ),
+            ListTile(
+              title: Text("Error (%)"),
+              trailing: FractionallySizedBox(
+                widthFactor: .5,
+                heightFactor: .6,
+                child: TextField(
+                  controller: TextEditingController(text: "TODO"),
+                  // model.co2Level.toStringAsPrecision(4)), TODO calculate error %
+                  enabled: false,
+                  decoration: InputDecoration(
+                    labelText: "%",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
                     ),
                   ),
+                  keyboardType: TextInputType.numberWithOptions(
+                      decimal: true, signed: false),
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter(
+                        RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -134,9 +113,9 @@ class PIDCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<BluetoothModel>(
-      onModelReady: (bluetooth) => {},
-      builder: (context, bluetooth, child) => Card(
+    return BaseWidget<ServoRegulationViewModel>(
+      onModelReady: (model) => {},
+      builder: (context, model, child) => Card(
         child: Column(
           children: <Widget>[
             Padding(
@@ -154,33 +133,28 @@ class PIDCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .225,
                 heightFactor: .6,
-                child: BaseWidget<StorageModel>(
-                  onModelReady: (storage) => {},
-                  builder: (context, storage, child) => TextField(
-                    controller: TextEditingController(
-                        text: storage.first.pGain.toStringAsPrecision(4)),
-                    enabled: storage.first.sysMode == 1,
-                    decoration: InputDecoration(
-                      labelText: "Value",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
+                child: TextField(
+                  controller: TextEditingController(
+                      text: model.pGain.toStringAsPrecision(4)),
+                  enabled: model.systemMode == 1,
+                  decoration: InputDecoration(
+                    labelText: "Value",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
                     ),
-                    keyboardType: TextInputType.numberWithOptions(
-                        decimal: true, signed: false),
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter(
-                          RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
-                    ],
-                    onSubmitted: (String value) {
-                      print("sending P value...");
-                      if (value != "")
-                        bluetooth.dataSendController
-                            .add("Proportional gain : ${double.parse(value)}");
-                      print("sent");
-                    },
                   ),
+                  keyboardType: TextInputType.numberWithOptions(
+                      decimal: true, signed: false),
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter(
+                        RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
+                  ],
+                  onSubmitted: (String value) {
+                    print("sending P value...");
+                    model.updatePGain(value);
+                    print("sent");
+                  },
                 ),
               ),
             ),
@@ -189,34 +163,28 @@ class PIDCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .225,
                 heightFactor: .6,
-                child: BaseWidget<StorageModel>(
-                  onModelReady: (storage) => {},
-                  builder: (context, storage, child) => TextField(
-                    enabled: storage.first.sysMode == 1,
-                    controller: TextEditingController(
-                        text: storage.first.iGain.toStringAsPrecision(4)),
-                    decoration: InputDecoration(
-                      labelText: "Value",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
+                child: TextField(
+                  enabled: model.systemMode == 1,
+                  controller: TextEditingController(
+                      text: model.iGain.toStringAsPrecision(4)),
+                  decoration: InputDecoration(
+                    labelText: "Value",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
                     ),
-                    keyboardType: TextInputType.numberWithOptions(
-                        decimal: true, signed: false),
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter(
-                          RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
-                    ],
-                    onSubmitted: (String value) {
-                      //TODO remove logic later
-                      print("sending I value...");
-                      if (value != "")
-                        bluetooth.dataSendController
-                            .add("Integral gain : ${double.parse(value)}");
-                      print("sent");
-                    },
                   ),
+                  keyboardType: TextInputType.numberWithOptions(
+                      decimal: true, signed: false),
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter(
+                        RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
+                  ],
+                  onSubmitted: (String value) {
+                    print("sending I value...");
+                    model.updateIGain(value);
+                    print("sent");
+                  },
                 ),
               ),
             ),
@@ -225,34 +193,28 @@ class PIDCard extends StatelessWidget {
               trailing: FractionallySizedBox(
                 widthFactor: .225,
                 heightFactor: .6,
-                child: BaseWidget<StorageModel>(
-                  onModelReady: (storage) => {},
-                  builder: (context, storage, child) => TextField(
-                    enabled: storage.first.sysMode == 1,
-                    controller: TextEditingController(
-                        text: storage.first.dGain.toStringAsPrecision(4)),
-                    decoration: InputDecoration(
-                      labelText: "Value",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
+                child: TextField(
+                  enabled: model.systemMode == 1,
+                  controller: TextEditingController(
+                      text: model.dGain.toStringAsPrecision(4)),
+                  decoration: InputDecoration(
+                    labelText: "Value",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
                     ),
-                    keyboardType: TextInputType.numberWithOptions(
-                        decimal: true, signed: false),
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter(
-                          RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
-                    ],
-                    onSubmitted: (String value) {
-                      //TODO remove logic later
-                      print("sending D value...");
-                      if (value != "")
-                        bluetooth.dataSendController
-                            .add("Derivative gain : ${double.parse(value)}");
-                      print("sent");
-                    },
                   ),
+                  keyboardType: TextInputType.numberWithOptions(
+                      decimal: true, signed: false),
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter(
+                        RegExp('^\$|^(0|([0-9]{0,2}))(\\.[0-9]{0,3})?\$')),
+                  ],
+                  onSubmitted: (String value) {
+                    print("sending D value...");
+                    model.updateDGain(value);
+                    print("sent");
+                  },
                 ),
               ),
             ),

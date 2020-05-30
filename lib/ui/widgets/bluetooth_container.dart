@@ -1,5 +1,5 @@
+import 'package:artificial_lung/core/viewmodels/history_viewmodel.dart';
 import 'package:artificial_lung/core/enums/enums.dart';
-import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
 import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +8,7 @@ class BluetoothConnectionContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<BluetoothModel>(
+    return BaseWidget<HistoryViewModel>(
       onModelReady: (model) => {},
       builder: (context, model, child) => Card(
         elevation: 8.0,

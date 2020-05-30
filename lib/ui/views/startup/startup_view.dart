@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
 import 'package:flutter/material.dart';
 import 'package:artificial_lung/locator.dart';
 import 'package:artificial_lung/core/services/navigation.dart';
@@ -15,8 +14,6 @@ class _StartupViewState extends State<StartupView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // sensorModel already called in constructor within locator file
-    locator<BluetoothModel>().initState();
     Timer(Duration(seconds: 1),
         () => locator<NavigationService>().navigateTo(SensorsRoute));
   }
