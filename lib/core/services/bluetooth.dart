@@ -14,9 +14,8 @@ class Bluetooth {
   final _storage = locator<Storage>();
 
   StreamSubscription<ScanResult> scanSubscription;
-  // StreamSubscription<BluetoothDeviceState> deviceStateSubscription;
-  StreamController<BluetoothStatus> connectionStatusController =
-      StreamController<BluetoothStatus>.broadcast();
+  StreamSubscription<BluetoothDeviceState> deviceStateSubscription;
+  BluetoothStatus bluetoothStatus = BluetoothStatus.Disconnected;
 
   //TODO make streams private _, create functions to add to streams
   StreamController<String> dataSendController =
@@ -33,7 +32,7 @@ class Bluetooth {
 
   Bluetooth({this.deviceName, this.serviceUUID, this.characteristicUUID}) {
     // TODO check bluetooth isavailable
-    startScan();
+
     dataSendController.stream.listen((event) {
       // from application to device
       _onDataSend(event);
@@ -44,10 +43,12 @@ class Bluetooth {
       // from device to application
       _onDataReceive(event);
     });
+
+    startScan();
   }
 
   void dispose() {
-    connectionStatusController.close();
+    deviceStateSubscription.cancel();
     dataSendController.close();
     dataReceiveController.close();
   }
@@ -94,6 +95,10 @@ class Bluetooth {
         return BluetoothStatus.Disconnected;
       case BluetoothDeviceState.connected:
         return BluetoothStatus.Connected;
+      case BluetoothDeviceState.connecting:
+        return BluetoothStatus.Connecting;
+      case BluetoothDeviceState.disconnecting:
+        return BluetoothStatus.Disconnecting;
       default:
         return BluetoothStatus.Disconnected;
     }
@@ -113,6 +118,7 @@ class Bluetooth {
               print(
                   '${scanResult.device.name} found! rssi: ${scanResult.rssi}');
               targetDevice = scanResult.device;
+
               connectToDevice();
             }
           },
@@ -137,18 +143,14 @@ class Bluetooth {
 
   connectToDevice() async {
     if (targetDevice == null) {
-      connectionStatusController.add(BluetoothStatus.Disconnected);
       return;
     }
 
-    await targetDevice.connect();
-
-    targetDevice.state.listen((BluetoothDeviceState event) {
-      var connectionStatus = _getStateFromEvent(event);
-      connectionStatusController.add(connectionStatus);
-    }, onError: () {
-      connectionStatusController.add(BluetoothStatus.Disconnected);
+    deviceStateSubscription = targetDevice.state.listen((event) {
+      bluetoothStatus = _getStateFromEvent(event);
     });
+
+    await targetDevice.connect();
 
     List<BluetoothDevice> connectedDevices = await flutterBlue.connectedDevices;
     if (connectedDevices.contains(deviceName)) {
