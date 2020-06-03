@@ -1,6 +1,5 @@
 import 'package:artificial_lung/core/services/bluetooth.dart';
 import 'package:artificial_lung/core/services/data.dart';
-import 'package:artificial_lung/core/viewmodels/base_model.dart';
 import 'package:artificial_lung/locator.dart';
 import 'package:stacked/stacked.dart';
 
