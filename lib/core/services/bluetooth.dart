@@ -58,7 +58,6 @@ class Bluetooth {
   void _onDataSend(String data) async {
     //TODO format data to be sent. Waiting for Navid
     await writeData(data);
-    await _dataService.fetchData(); // TODO should this be here?
     // depends on if code should reset and rely on the bluetooth values vs what is passed
   }
 
@@ -80,12 +79,10 @@ class Bluetooth {
       return;
     }
 
-    _dataService.fetchData().then((fetchedData) {
-      Map<String, dynamic> newData = fetchedData.first.toJson();
-      newData[key] = value;
-      _storage.appendDatumToFile(Datum.fromJson(newData));
-    });
-
+    await _dataService.fetchData();
+    Map<String, dynamic> newData = _dataService.first.toJson();
+    newData[key] = value;
+    await _storage.appendDatumToFile(Datum.fromJson(newData));
     await _dataService.fetchData(); // refresh app data, TODO not needed?
   }
 
