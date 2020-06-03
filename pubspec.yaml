@@ -19,6 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  stacked:
+  observable_ish:
   flutter_blue: # ^0.6.1 # ^0.6.3
   cupertino_icons:
   provider:
