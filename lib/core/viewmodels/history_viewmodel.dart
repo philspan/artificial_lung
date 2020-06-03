@@ -3,10 +3,10 @@ import 'package:artificial_lung/core/models/data.dart';
 import 'package:artificial_lung/core/services/bluetooth.dart';
 import 'package:artificial_lung/core/services/data.dart';
 import 'package:artificial_lung/core/services/storage.dart';
-import 'package:artificial_lung/core/viewmodels/base_model.dart';
 import 'package:artificial_lung/locator.dart';
+import 'package:stacked/stacked.dart';
 
-class HistoryViewModel extends BaseModel {
+class HistoryViewModel extends ReactiveViewModel {
   final _bluetooth = locator<Bluetooth>();
   final _dataService = locator<DataService>();
   final _storage = locator<Storage>();
@@ -16,6 +16,9 @@ class HistoryViewModel extends BaseModel {
   int get dataLength => _dataService.data.length;
 
   BluetoothStatus get bluetoothState => _bluetooth.bluetoothStatus;
+
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_dataService];
 
   void addDatumValue(double value) {
     _storage.appendDatumToFile(Datum.value(value));

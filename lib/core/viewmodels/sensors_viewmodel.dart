@@ -1,11 +1,13 @@
 import 'package:artificial_lung/core/services/bluetooth.dart';
 import 'package:artificial_lung/core/services/data.dart';
-import 'package:artificial_lung/core/viewmodels/base_model.dart';
 import 'package:artificial_lung/locator.dart';
+import 'package:stacked/stacked.dart';
 
-class SensorsViewModel extends BaseModel {
+class SensorsViewModel extends ReactiveViewModel {
   final _bluetooth = locator<Bluetooth>();
   final _dataService = locator<DataService>();
+
+  bool get hasData => _dataService.hasData;
 
   int get systemMode => _dataService.first.sysMode;
 
@@ -19,6 +21,9 @@ class SensorsViewModel extends BaseModel {
 
   bool get co2State => _dataService.first.co2State;
   double get co2Level => _dataService.first.co2Level;
+
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_dataService];
 
   void enableAirState() {
     _bluetooth.dataSendController.add("air state : true");
