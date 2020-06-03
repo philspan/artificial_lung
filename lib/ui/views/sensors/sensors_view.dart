@@ -1,6 +1,5 @@
 import 'package:artificial_lung/core/viewmodels/sensors_viewmodel.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
-import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
