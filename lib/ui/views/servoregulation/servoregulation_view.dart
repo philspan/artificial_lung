@@ -1,9 +1,9 @@
 import 'package:artificial_lung/core/viewmodels/servoregulation_viewmodel.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
-import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stacked/stacked.dart';
 
 class ServoRegulationView extends StatelessWidget {
   const ServoRegulationView({Key key}) : super(key: key);
@@ -27,14 +27,13 @@ class ServoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<ServoRegulationViewModel>(
-      onModelReady: (model) => {},
+    return ViewModelBuilder<ServoRegulationViewModel>.reactive(
       builder: (context, model, child) => Card(
         child: Column(
           children: <Widget>[
             AdaptiveSwitchListTile(
               title: Text("CO\u2082 Servo Regulation"),
-              value: model.systemMode == 1,
+              value: model.hasData ? model.systemMode == 1 : false,
               activeColor: CupertinoColors.activeGreen,
               onChanged: (changed) {
                 changed
@@ -49,10 +48,12 @@ class ServoCard extends StatelessWidget {
                 heightFactor: .6,
                 child: TextField(
                   controller: TextEditingController(
-                      text: model
-                          .co2Level //TODO change to .targetCO2 after adding to data structure (Navid)
-                          .toStringAsPrecision(4)),
-                  enabled: model.systemMode == 1,
+                      text: model.hasData
+                          ? model
+                              .co2Level //TODO change to .targetCO2 after adding to data structure (Navid)
+                              .toStringAsPrecision(4)
+                          : "No Data"),
+                  enabled: model.hasData ? model.systemMode == 1 : false,
                   decoration: InputDecoration(
                     labelText: "%",
                     border: OutlineInputBorder(
@@ -80,7 +81,8 @@ class ServoCard extends StatelessWidget {
                 widthFactor: .5,
                 heightFactor: .6,
                 child: TextField(
-                  controller: TextEditingController(text: "TODO"),
+                  controller: TextEditingController(
+                      text: model.hasData ? "TODO" : "TODO"),
                   // model.co2Level.toStringAsPrecision(4)), TODO calculate error %
                   enabled: false,
                   decoration: InputDecoration(
@@ -102,6 +104,7 @@ class ServoCard extends StatelessWidget {
           ],
         ),
       ),
+      viewModelBuilder: () => ServoRegulationViewModel(),
     );
   }
 }
@@ -113,7 +116,7 @@ class PIDCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<ServoRegulationViewModel>(
+    return ViewModelBuilder<ServoRegulationViewModel>.reactive(
       onModelReady: (model) => {},
       builder: (context, model, child) => Card(
         child: Column(
@@ -135,8 +138,10 @@ class PIDCard extends StatelessWidget {
                 heightFactor: .6,
                 child: TextField(
                   controller: TextEditingController(
-                      text: model.pGain.toStringAsPrecision(4)),
-                  enabled: model.systemMode == 1,
+                      text: model.hasData
+                          ? model.pGain.toStringAsPrecision(4)
+                          : "No Data"),
+                  enabled: model.hasData ? model.systemMode == 1 : false,
                   decoration: InputDecoration(
                     labelText: "Value",
                     border: OutlineInputBorder(
@@ -164,9 +169,11 @@ class PIDCard extends StatelessWidget {
                 widthFactor: .225,
                 heightFactor: .6,
                 child: TextField(
-                  enabled: model.systemMode == 1,
+                  enabled: model.hasData ? model.systemMode == 1 : false,
                   controller: TextEditingController(
-                      text: model.iGain.toStringAsPrecision(4)),
+                      text: model.hasData
+                          ? model.iGain.toStringAsPrecision(4)
+                          : "No Data"),
                   decoration: InputDecoration(
                     labelText: "Value",
                     border: OutlineInputBorder(
@@ -194,9 +201,11 @@ class PIDCard extends StatelessWidget {
                 widthFactor: .225,
                 heightFactor: .6,
                 child: TextField(
-                  enabled: model.systemMode == 1,
+                  enabled: model.hasData ? model.systemMode == 1 : false,
                   controller: TextEditingController(
-                      text: model.dGain.toStringAsPrecision(4)),
+                      text: model.hasData
+                          ? model.dGain.toStringAsPrecision(4)
+                          : "No Data"),
                   decoration: InputDecoration(
                     labelText: "Value",
                     border: OutlineInputBorder(
@@ -221,6 +230,7 @@ class PIDCard extends StatelessWidget {
           ],
         ),
       ),
+      viewModelBuilder: () => ServoRegulationViewModel(),
     );
   }
 }

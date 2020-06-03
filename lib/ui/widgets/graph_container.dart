@@ -1,7 +1,7 @@
 import 'package:artificial_lung/core/viewmodels/history_viewmodel.dart';
-import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 class GraphContainer extends StatelessWidget {
   GraphContainer({Key key}) : super(key: key);
@@ -9,12 +9,8 @@ class GraphContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
-    return BaseWidget<HistoryViewModel>(
-      onModelReady: (model) {
-        // model.readJSON();
-      },
-      builder: (context, model, child) => 
-      Card(
+    return ViewModelBuilder<HistoryViewModel>.reactive(
+      builder: (context, model, child) => Card(
         elevation: 8.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         child: Column(
@@ -42,25 +38,41 @@ class GraphContainer extends StatelessWidget {
                   series: [
                     BezierLine(
                       lineColor: Color.fromARGB(255, 0, 39, 76),
-                      data: (model.dataLength < 7 && model.hasData) ? [
-                        DataPoint<double>(value: 0, xAxis: 15),
-                        DataPoint<double>(value: 0, xAxis: 20),
-                        DataPoint<double>(value: 0, xAxis: 25),
-                        DataPoint<double>(value: 0, xAxis: 30),
-                        DataPoint<double>(value: 0, xAxis: 35),
-                        DataPoint<double>(value: 0, xAxis: 10),
-                        DataPoint<double>(value: 0, xAxis: 5),
-                        DataPoint<double>(value: 0, xAxis: 0),
-                        ] : [
-                        DataPoint<double>(value: model.data[7].co2Level ?? 0, xAxis: 15),
-                        DataPoint<double>(value: model.data[6].co2Level ?? 0, xAxis: 20),
-                        DataPoint<double>(value: model.data[5].co2Level ?? 0, xAxis: 25),
-                        DataPoint<double>(value: model.data[4].co2Level ?? 0, xAxis: 30),
-                        DataPoint<double>(value: model.data[3].co2Level ?? 0, xAxis: 35),
-                        DataPoint<double>(value: model.data[2].co2Level ?? 0, xAxis: 10),
-                        DataPoint<double>(value: model.data[1].co2Level ?? 0, xAxis: 5),
-                        DataPoint<double>(value: model.data[0].co2Level ?? 0, xAxis: 0),
-                      ],
+                      data: (model.dataLength < 7 && model.hasData)
+                          ? [
+                              DataPoint<double>(value: 0, xAxis: 15),
+                              DataPoint<double>(value: 0, xAxis: 20),
+                              DataPoint<double>(value: 0, xAxis: 25),
+                              DataPoint<double>(value: 0, xAxis: 30),
+                              DataPoint<double>(value: 0, xAxis: 35),
+                              DataPoint<double>(value: 0, xAxis: 10),
+                              DataPoint<double>(value: 0, xAxis: 5),
+                              DataPoint<double>(value: 0, xAxis: 0),
+                            ]
+                          : [
+                              DataPoint<double>(
+                                  value: model.data[7].co2Level ?? 0,
+                                  xAxis: 15),
+                              DataPoint<double>(
+                                  value: model.data[6].co2Level ?? 0,
+                                  xAxis: 20),
+                              DataPoint<double>(
+                                  value: model.data[5].co2Level ?? 0,
+                                  xAxis: 25),
+                              DataPoint<double>(
+                                  value: model.data[4].co2Level ?? 0,
+                                  xAxis: 30),
+                              DataPoint<double>(
+                                  value: model.data[3].co2Level ?? 0,
+                                  xAxis: 35),
+                              DataPoint<double>(
+                                  value: model.data[2].co2Level ?? 0,
+                                  xAxis: 10),
+                              DataPoint<double>(
+                                  value: model.data[1].co2Level ?? 0, xAxis: 5),
+                              DataPoint<double>(
+                                  value: model.data[0].co2Level ?? 0, xAxis: 0),
+                            ],
                     ),
                   ],
                   config: BezierChartConfig(
@@ -84,6 +96,7 @@ class GraphContainer extends StatelessWidget {
           ],
         ),
       ),
+      viewModelBuilder: () => HistoryViewModel(),
     );
   }
 }
