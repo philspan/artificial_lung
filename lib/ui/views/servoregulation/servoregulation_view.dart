@@ -32,9 +32,8 @@ class ServoCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             AdaptiveSwitchListTile(
-              title: Text("CO\u2082 Servo Regulation"),
+              title: Text("CO\u2082 Servoregulation", style: Theme.of(context).textTheme.headline4),
               value: model.hasData ? model.systemMode == 1 : false,
-              activeColor: CupertinoColors.activeGreen,
               onChanged: (changed) {
                 changed
                     ? model.enableServoregulation()
@@ -56,10 +55,6 @@ class ServoCard extends StatelessWidget {
                   enabled: model.hasData ? model.systemMode == 1 : false,
                   decoration: InputDecoration(
                     labelText: "%",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
-                    ),
                   ),
                   keyboardType: TextInputType.numberWithOptions(
                       decimal: true, signed: false),
@@ -87,10 +82,6 @@ class ServoCard extends StatelessWidget {
                   enabled: false,
                   decoration: InputDecoration(
                     labelText: "%",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
-                    ),
                   ),
                   keyboardType: TextInputType.numberWithOptions(
                       decimal: true, signed: false),
@@ -126,7 +117,7 @@ class PIDCard extends StatelessWidget {
               child: Container(
                 child: Text(
                   "Controller Tuning",
-                  style: TextStyle(fontSize: 18),
+                  style: Theme.of(context).textTheme.headline4,
                 ),
                 alignment: Alignment.topLeft,
               ),
@@ -144,10 +135,6 @@ class PIDCard extends StatelessWidget {
                   enabled: model.hasData ? model.systemMode == 1 : false,
                   decoration: InputDecoration(
                     labelText: "Value",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
-                    ),
                   ),
                   keyboardType: TextInputType.numberWithOptions(
                       decimal: true, signed: false),
@@ -176,10 +163,6 @@ class PIDCard extends StatelessWidget {
                           : "No Data"),
                   decoration: InputDecoration(
                     labelText: "Value",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
-                    ),
                   ),
                   keyboardType: TextInputType.numberWithOptions(
                       decimal: true, signed: false),
@@ -208,10 +191,6 @@ class PIDCard extends StatelessWidget {
                           : "No Data"),
                   decoration: InputDecoration(
                     labelText: "Value",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
-                    ),
                   ),
                   keyboardType: TextInputType.numberWithOptions(
                       decimal: true, signed: false),

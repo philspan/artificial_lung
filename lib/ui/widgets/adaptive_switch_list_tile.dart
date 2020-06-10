@@ -75,7 +75,7 @@ class AdaptiveSwitchListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var color = activeColor ?? Theme.of(context).accentColor;
+    var color = activeColor ?? Theme.of(context).toggleButtonsTheme.color;
     final Widget control = new Switch.adaptive(
       value: value,
       onChanged: onChanged,

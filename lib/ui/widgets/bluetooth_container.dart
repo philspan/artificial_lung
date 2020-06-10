@@ -24,13 +24,11 @@ class BluetoothConnectionContainer extends StatelessWidget {
                   Icon(
                     Icons.bluetooth,
                     size: 72,
-                    color: Color.fromARGB(255, 0, 39, 76),
                   ),
                   Text(
                     'Bluetooth Status',
                     style: TextStyle(
                       fontSize: 24,
-                      color: Color.fromARGB(255, 0, 39, 76),
                     ),
                   ),
                 ],
@@ -48,13 +46,12 @@ class BluetoothConnectionContainer extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24,
-                            color: Colors.white,
                           ),
                         ),
                 ),
                 color: (model.bluetoothState == BluetoothStatus.Connected)
-                    ? Colors.green
-                    : Colors.red,
+                    ? Color(0xFF3FD89A)
+                    : Color(0xFFFF535C),
               )
             ],
           ),

@@ -11,6 +11,7 @@ class GraphContainer extends StatelessWidget {
     DateTime now = DateTime.now();
     return ViewModelBuilder<HistoryViewModel>.reactive(
       builder: (context, model, child) => Card(
+        color: Theme.of(context).cardColor,
         elevation: 8.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         child: Column(
@@ -19,9 +20,6 @@ class GraphContainer extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'Today is ${now.month}/${now.day}/${now.year}. ${now.hour}:${now.minute}',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
               ),
             ),
             Padding(
@@ -51,11 +49,9 @@ class GraphContainer extends StatelessWidget {
                             ]
                           : [
                               DataPoint<double>(
-                                  value: model.data[7].co2Level ?? 0,
-                                  xAxis: 15),
+                                  value: model.co2Level[7] ?? 0, xAxis: 15),
                               DataPoint<double>(
-                                  value: model.data[6].co2Level ?? 0,
-                                  xAxis: 20),
+                                  value: model.co2Level[6] ?? 0, xAxis: 20),
                               DataPoint<double>(
                                   value: model.data[5].co2Level ?? 0,
                                   xAxis: 25),

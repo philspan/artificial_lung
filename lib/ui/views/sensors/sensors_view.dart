@@ -38,7 +38,6 @@ class AirCard extends StatelessWidget {
                   AdaptiveSwitchListTile(
                     title: Text("Air Pump Control"),
                     value: model.hasData ? model.airState : false,
-                    activeColor: CupertinoColors.activeGreen,
                     onChanged: (changed) {
                       // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
                       // create a separate method call for adding values to stream
@@ -48,6 +47,7 @@ class AirCard extends StatelessWidget {
                           : model.disableAirState();
                     },
                   ),
+                  Divider(),
                   ListTile(
                     title: Text("Current (A)"),
                     trailing: FractionallySizedBox(
@@ -56,13 +56,9 @@ class AirCard extends StatelessWidget {
                       child: TextField(
                         controller: TextEditingController(
                             text: model.hasData ? model.airCurrent.toStringAsPrecision(4) : "No Data"),
-                        enabled: false,
+                        enabled: true,
                         decoration: InputDecoration(
                           labelText: "A",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(),
-                          ),
                         ),
                         keyboardType: TextInputType.numberWithOptions(),
                       ),
@@ -79,10 +75,6 @@ class AirCard extends StatelessWidget {
                         enabled: false,
                         decoration: InputDecoration(
                           labelText: "V",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(),
-                          ),
                         ),
                         keyboardType: TextInputType.numberWithOptions(),
                       ),
@@ -99,10 +91,6 @@ class AirCard extends StatelessWidget {
                         enabled: false,
                         decoration: InputDecoration(
                           labelText: "W",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(),
-                          ),
                         ),
                         keyboardType: TextInputType.numberWithOptions(),
                       ),
@@ -118,12 +106,6 @@ class AirCard extends StatelessWidget {
                             text: "TODO"), // model.first.flowLevel
                         // .toStringAsPrecision(4)),
                         enabled: false,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(),
-                          ),
-                        ),
                         keyboardType: TextInputType.numberWithOptions(),
                       ),
                     ),
@@ -149,7 +131,6 @@ class FlowCard extends StatelessWidget {
                   AdaptiveSwitchListTile(
                     title: Text("Flow Sensor"),
                     value: model.hasData ? model.flowState : false,
-                    activeColor: CupertinoColors.activeGreen,
                     onChanged: (changed) {
                       // for now, keep servoState line in UI. move to view model function later to incorporate bluetooth
                       if (model.systemMode != 1)
@@ -169,10 +150,6 @@ class FlowCard extends StatelessWidget {
                         enabled: false,
                         decoration: InputDecoration(
                           labelText: "V",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(),
-                          ),
                         ),
                         keyboardType: TextInputType.numberWithOptions(),
                       ),
@@ -187,12 +164,6 @@ class FlowCard extends StatelessWidget {
                         controller: TextEditingController(
                             text: model.hasData ? model.flowLevel.toStringAsPrecision(4) : "No Data"),
                         enabled: false,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(),
-                          ),
-                        ),
                         keyboardType: TextInputType.numberWithOptions(),
                       ),
                     ),
@@ -218,7 +189,6 @@ class CO2Card extends StatelessWidget {
                   AdaptiveSwitchListTile(
                     title: Text("CO\u2082 Sensor"),
                     value: model.hasData ? model.co2State : false,
-                    activeColor: CupertinoColors.activeGreen,
                     onChanged: (changed) {
                       if (model.systemMode != 1)
                         changed
@@ -237,10 +207,6 @@ class CO2Card extends StatelessWidget {
                         enabled: false,
                         decoration: InputDecoration(
                           labelText: "%",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(),
-                          ),
                         ),
                         keyboardType: TextInputType.numberWithOptions(),
                       ),
