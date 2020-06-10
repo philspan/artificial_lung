@@ -22,6 +22,7 @@ dependencies:
   stacked:
   observable_ish:
   flutter_blue: # ^0.6.1 # ^0.6.3
+  google_fonts:
   cupertino_icons:
   provider:
   get_it:
@@ -62,10 +63,18 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Sinter
+      fonts:
+        - asset: lib/ui/themes/fonts/Sinter/Sinter-Regular.ttf
+          weight: 400
+        - asset: lib/ui/themes/fonts/Sinter/Sinter-Medium.ttf
+          weight: 500
+        - asset: lib/ui/themes/fonts/Sinter/Sinter-Bold.ttf
+          weight: 700
+        - asset: lib/ui/themes/fonts/Sinter/Sinter-Ultra.ttf
+          weight: 900
+        
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

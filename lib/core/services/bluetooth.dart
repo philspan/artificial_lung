@@ -158,7 +158,7 @@ class Bluetooth {
     await targetCharacteristic.setNotifyValue(true);
     targetCharacteristic.value.listen((value) {
       // adds converted string value to the receive controller
-      dataReceiveController.add(readData(value));
+      dataReceiveController.add(convertData(value));
     });
   }
 
@@ -194,7 +194,7 @@ class Bluetooth {
     await targetCharacteristic.write(bytes);
   }
 
-  String readData(List<int> bytes) {
+  String convertData(List<int> bytes) {
     // possibly throw error and wrap reading in try catch
     if (targetCharacteristic == null) return "";
     return utf8.decode(bytes);

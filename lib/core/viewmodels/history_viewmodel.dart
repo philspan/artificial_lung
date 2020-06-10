@@ -12,6 +12,8 @@ class HistoryViewModel extends ReactiveViewModel {
   final _storage = locator<Storage>();
 
   List<Datum> get data => _dataService.data;
+  List<double> get co2Level => _dataService.co2Level;
+
   bool get hasData => _dataService.hasData;
   int get dataLength => _dataService.data.length;
 
@@ -22,5 +24,7 @@ class HistoryViewModel extends ReactiveViewModel {
 
   void addDatumValue(double value) {
     _storage.appendDatumToFile(Datum.value(value));
+    _dataService.fetchData().then((value) => null);
+    notifyListeners();
   }
 }

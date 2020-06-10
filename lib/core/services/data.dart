@@ -25,6 +25,15 @@ class DataService with ReactiveServiceMixin {
     return _data.value.first;
   }
 
+  // TODO might remove later, as this may not be necessarily the dataservice's responsibility
+  List<double> get co2Level {
+    List<double> co2Level = List<double>();
+    _data.value.forEach((element) {
+      co2Level.add(element.co2Level);
+    });
+    return co2Level;
+  }
+
   Future<List<Datum>> fetchData() async {
     // _data = RxList.from(await _storage.readDataFromFile());
     _data.value = await _storage.readDataFromFile();

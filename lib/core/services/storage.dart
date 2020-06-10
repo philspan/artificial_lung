@@ -47,7 +47,7 @@ class Storage extends ChangeNotifier {
       return data;
     } catch (e) {
       if (e is FileSystemException) {
-        print("FileSystemException error! Creating file...");
+        print("FileSystemException error!");
         // writeDataToFile(Data.initial());
         return readDataFromFile();
       }
