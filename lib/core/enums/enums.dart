@@ -1,6 +1,6 @@
 enum ViewState {Idle, Busy}
 enum StorageState {Idle, Busy}
-enum BluetoothStatus {Connected, Disconnected}
+enum BluetoothStatus {Disconnected, Connecting, Connected, Disconnecting}
 
 // enum CO2Status {Enabled, Disabled}
 // enum FlowStatus {Enabled, Disabled}

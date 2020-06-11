@@ -1,7 +1,5 @@
 import 'package:artificial_lung/core/services/navigation.dart';
-import 'package:artificial_lung/core/viewmodels/storage_model.dart';
 import 'package:artificial_lung/locator.dart';
-import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,46 +15,66 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
   int _currentIndex = 1;
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<StorageModel>(
-      onModelReady: (model) {},
-      builder: (context, model, child) => Scaffold(
-        bottomNavigationBar: CupertinoTabBar(
-          currentIndex: _currentIndex,
-          activeColor: Color.fromARGB(255, 0, 39, 76),
-          onTap: (int value) {
-            if (_currentIndex != value) {
-              setState(() {
-                _currentIndex = value;
-              });
-              switch (value) {
-                case 0:
-                  locator<NavigationService>().navigateTo(HistoryRoute);
-                  break;
-                case 1:
-                  locator<NavigationService>().navigateTo(SensorsRoute);
-                  break;
-                case 2:
-                  locator<NavigationService>().navigateTo(ServoRegulationRoute);
-                  break;
-              }
+    return Scaffold(
+      bottomNavigationBar: CupertinoTabBar(
+        backgroundColor: Theme.of(context).bottomAppBarColor,
+        activeColor: Theme.of(context).bottomAppBarColor,
+        inactiveColor: Theme.of(context).backgroundColor,
+        currentIndex: _currentIndex,
+        onTap: (int value) {
+          if (_currentIndex != value) {
+            setState(() {
+              _currentIndex = value;
+            });
+            switch (value) {
+              case 0:
+                locator<NavigationService>().navigateTo(HistoryRoute);
+                break;
+              case 1:
+                locator<NavigationService>().navigateTo(SensorsRoute);
+                break;
+              case 2:
+                locator<NavigationService>().navigateTo(ServoRegulationRoute);
+                break;
             }
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.show_chart),
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Icon(
+                Icons.show_chart,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.gear_solid),
+          ),
+          BottomNavigationBarItem(
+            icon: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Icon(
+                CupertinoIcons.gear_solid,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.memory),
+          ),
+          BottomNavigationBarItem(
+            icon: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Icon(Icons.memory),
             ),
-          ],
-        ),
-        backgroundColor: CupertinoColors.lightBackgroundGray,
-        body: Center(
-          child: this.widget.child,
-        ),
+          ),
+        ],
+      ),
+      body: Center(
+        child: this.widget.child,
       ),
     );
   }

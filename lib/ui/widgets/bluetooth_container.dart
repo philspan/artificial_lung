@@ -1,15 +1,14 @@
+import 'package:artificial_lung/core/viewmodels/history_viewmodel.dart';
 import 'package:artificial_lung/core/enums/enums.dart';
-import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
-import 'package:artificial_lung/ui/widgets/base_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 class BluetoothConnectionContainer extends StatelessWidget {
   const BluetoothConnectionContainer({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<BluetoothModel>(
-      onModelReady: (model) => {},
+    return ViewModelBuilder<HistoryViewModel>.reactive(
       builder: (context, model, child) => Card(
         elevation: 8.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -25,13 +24,11 @@ class BluetoothConnectionContainer extends StatelessWidget {
                   Icon(
                     Icons.bluetooth,
                     size: 72,
-                    color: Color.fromARGB(255, 0, 39, 76),
                   ),
                   Text(
                     'Bluetooth Status',
                     style: TextStyle(
                       fontSize: 24,
-                      color: Color.fromARGB(255, 0, 39, 76),
                     ),
                   ),
                 ],
@@ -40,7 +37,7 @@ class BluetoothConnectionContainer extends StatelessWidget {
                 elevation: 4.0,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: model.viewState == ViewState.Busy
+                  child: model.isBusy
                       ? (CircularProgressIndicator())
                       : Text(
                           (model.bluetoothState == BluetoothStatus.Connected
@@ -49,18 +46,18 @@ class BluetoothConnectionContainer extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24,
-                            color: Colors.white,
                           ),
                         ),
                 ),
                 color: (model.bluetoothState == BluetoothStatus.Connected)
-                    ? Colors.green
-                    : Colors.red,
+                    ? Color(0xFF3FD89A)
+                    : Color(0xFFFF535C),
               )
             ],
           ),
         ),
       ),
+      viewModelBuilder: () => HistoryViewModel(),
     );
   }
 }

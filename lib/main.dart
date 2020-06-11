@@ -1,4 +1,5 @@
 import 'package:artificial_lung/core/services/navigation.dart';
+import 'package:artificial_lung/ui/themes/theme_data.dart';
 import 'package:artificial_lung/ui/views/layout_template/layout_template.dart';
 import 'package:flutter/material.dart';
 import 'package:artificial_lung/locator.dart';
@@ -12,16 +13,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Artificial Lung Servoregulator',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        accentColor: Colors.deepPurpleAccent,
-        brightness: Brightness.dark,
-      ),
+      themeMode: ThemeMode.system,
+      theme: AppThemeData.lightThemeData,
+      darkTheme: AppThemeData.darkThemeData,
       builder: (context, child) => LayoutTemplate(child: child),
       navigatorKey: locator<NavigationService>().navigatorKey,
       onGenerateRoute: generateRoute,

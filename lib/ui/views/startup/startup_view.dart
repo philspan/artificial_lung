@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:artificial_lung/core/viewmodels/bluetooth_model.dart';
+import 'package:artificial_lung/core/services/data.dart';
 import 'package:flutter/material.dart';
 import 'package:artificial_lung/locator.dart';
 import 'package:artificial_lung/core/services/navigation.dart';
@@ -15,8 +15,7 @@ class _StartupViewState extends State<StartupView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // sensorModel already called in constructor within locator file
-    locator<BluetoothModel>().initState();
+    locator<DataService>().fetchData().then((value) => null);
     Timer(Duration(seconds: 1),
         () => locator<NavigationService>().navigateTo(SensorsRoute));
   }
@@ -28,7 +27,7 @@ class _StartupViewState extends State<StartupView> {
         fit: StackFit.expand,
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(color: Color.fromARGB(255, 0, 39, 76)),
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.background),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -40,11 +39,11 @@ class _StartupViewState extends State<StartupView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       CircleAvatar(
-                        backgroundColor: Color.fromARGB(255, 70, 94, 133),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         radius: 50.0,
                         child: Icon(
                           Icons.whatshot,
-                          color: Color.fromARGB(255, 255, 205, 3),
+                          color: Theme.of(context).colorScheme.secondary,
                           size: 50.0,
                         ),
                       ),
@@ -54,7 +53,7 @@ class _StartupViewState extends State<StartupView> {
                       Text(
                         "Servoregulator",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onBackground,
                             fontWeight: FontWeight.bold,
                             fontSize: 24.0),
                       )
