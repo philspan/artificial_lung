@@ -7,6 +7,7 @@ class AppThemeData {
 
   static const _enabledColor = Color(0xFF3FD89A);
   static const _disabledColor = Color(0xFFFF535C);
+  static const _favoritesColor = Color(0xFFFFCB05);
 
   static final Color _lightFocusColor = _lightFillColor.withOpacity(0.12);
   static final Color _darkFocusColor = _darkFillColor.withOpacity(0.12);
@@ -20,18 +21,18 @@ class AppThemeData {
       colorScheme: colorScheme,
       brightness: colorScheme.brightness,
       fontFamily: 'Sinter',
-      textTheme: _textTheme.copyWith(
-        headline1: TextStyle(color: colorScheme.onBackground),
-        headline2: TextStyle(color: colorScheme.onBackground),
-        headline3: TextStyle(color: colorScheme.onBackground),
-        headline4: TextStyle(color: colorScheme.onBackground),
-        bodyText1: TextStyle(color: colorScheme.onBackground),
-        bodyText2: TextStyle(color: colorScheme.onBackground),
-        subtitle1: TextStyle(color: colorScheme.onBackground),
-        subtitle2: TextStyle(color: colorScheme.onBackground),
-        // overline: TextStyle(color: colorScheme.onBackground),
-        // caption: TextStyle(color: colorScheme.onBackground),
-        // button: TextStyle(color: colorScheme.onBackground),
+      textTheme: TextTheme(
+        headline1: TextStyle(color: colorScheme.onBackground, fontWeight: _ultra, fontSize: 26.0),
+        headline2: TextStyle(color: colorScheme.onBackground, fontWeight: _bold, fontSize: 26.0),
+        headline3: TextStyle(color: colorScheme.onBackground, fontWeight: _bold, fontSize: 24.0),
+        headline4: TextStyle(color: colorScheme.onBackground, fontWeight: _bold, fontSize: 20.0),
+        bodyText1: TextStyle(color: colorScheme.onBackground,fontWeight: _medium, fontSize: 20.0),
+        bodyText2: TextStyle(color: colorScheme.onBackground,fontWeight: _medium, fontSize: 10.0),
+        subtitle1: TextStyle(color: colorScheme.onBackground, fontWeight: _regular, fontSize: 20.0),
+        subtitle2: TextStyle(color: colorScheme.onBackground, fontWeight: _regular, fontSize: 16.0),
+        // overline: TextStyle(color: colorScheme.onBackground, fontWeight: _medium, fontSize: 12.0),
+        // caption: TextStyle(color: colorScheme.onBackground, fontWeight: _ultra, fontSize: 16.0),
+        // button: TextStyle(color: colorScheme.onBackground, fontWeight: _ultra, fontSize: 14.0),
       ),
       primaryColor: colorScheme.primary,
       accentColor: colorScheme.primary,
@@ -42,17 +43,18 @@ class AppThemeData {
       backgroundColor: colorScheme.background,
       canvasColor: colorScheme.background,
       bottomAppBarColor: colorScheme.secondary,
+      disabledColor: _disabledColor,
+      indicatorColor: _enabledColor,
+      toggleableActiveColor: _favoritesColor,
       iconTheme: IconThemeData(
         color: colorScheme.secondary,
       ),
       toggleButtonsTheme: ToggleButtonsThemeData(
           color: _enabledColor, disabledColor: _disabledColor),
       dividerTheme: DividerThemeData(
-        color: colorScheme.secondary,
+        color: colorScheme.primary,
         space: 2.0,
         thickness: 2.0,
-        indent: 16,
-        endIndent: 16,
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
@@ -70,7 +72,6 @@ class AppThemeData {
           _lightFillColor.withOpacity(0.80),
           _darkFillColor,
         ),
-        contentTextStyle: _textTheme.subtitle1.apply(color: _darkFillColor),
       ),
     );
   }
@@ -112,28 +113,4 @@ class AppThemeData {
   static const _bold = FontWeight.w700;
   static const _ultra = FontWeight.w900;
 
-  static final TextTheme _textTheme = TextTheme(
-    headline1: TextStyle(fontWeight: _ultra, fontSize: 30.0),
-    headline2: TextStyle(fontWeight: _ultra, fontSize: 26.0),
-    headline3: TextStyle(fontWeight: _bold, fontSize: 24.0),
-    headline4: TextStyle(fontWeight: _bold, fontSize: 20.0),
-    bodyText1: TextStyle(fontWeight: _medium, fontSize: 20.0),
-    bodyText2: TextStyle(fontWeight: _medium, fontSize: 10.0),
-    subtitle1: TextStyle(fontWeight: _regular, fontSize: 20.0),
-    subtitle2: TextStyle(fontWeight: _regular, fontSize: 16.0),
-    // overline: TextStyle(fontWeight: _medium, fontSize: 12.0),
-    // caption: TextStyle(fontWeight: _ultra, fontSize: 16.0),
-    // button: TextStyle(fontWeight: _ultra, fontSize: 14.0),
-
-    // headline4: GoogleFonts.montserrat(fontWeight: _bold, fontSize: 20.0),
-    // headline5: GoogleFonts.oswald(fontWeight: _medium, fontSize: 16.0),
-    // headline6: GoogleFonts.montserrat(fontWeight: _bold, fontSize: 16.0),
-    // bodyText1: GoogleFonts.montserrat(fontWeight: _regular, fontSize: 14.0),
-    // bodyText2: GoogleFonts.montserrat(fontWeight: _regular, fontSize: 16.0),
-    // subtitle1: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 16.0),
-    // subtitle2: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 14.0),
-    // overline: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 12.0),
-    // caption: GoogleFonts.oswald(fontWeight: _ultra, fontSize: 16.0),
-    // button: GoogleFonts.montserrat(fontWeight: _ultra, fontSize: 14.0),
-  );
 }
