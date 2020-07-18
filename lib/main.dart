@@ -21,7 +21,6 @@ class MainApp extends StatelessWidget {
       builder: (context, child) => LayoutTemplate(child: child),
       navigatorKey: locator<NavigationService>().navigatorKey,
       onGenerateRoute: generateRoute,
-      initialRoute: StartupRoute,
     );
   }
 }
