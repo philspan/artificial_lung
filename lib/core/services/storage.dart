@@ -10,6 +10,12 @@ class Storage extends ChangeNotifier {
 
   String fileName;
 
+  Future initialize() async {
+    // TODO check for file if null, create one
+    await localFile;
+    return;
+  }
+
   Future<String> get localPath async {
     final dir = await getApplicationDocumentsDirectory();
     return dir.path;

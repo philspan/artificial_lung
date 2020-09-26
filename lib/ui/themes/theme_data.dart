@@ -22,14 +22,32 @@ class AppThemeData {
       brightness: colorScheme.brightness,
       fontFamily: 'Sinter',
       textTheme: TextTheme(
-        headline1: TextStyle(color: colorScheme.onBackground, fontWeight: _ultra, fontSize: 26.0),
-        headline2: TextStyle(color: colorScheme.onBackground, fontWeight: _bold, fontSize: 26.0),
-        headline3: TextStyle(color: colorScheme.onBackground, fontWeight: _bold, fontSize: 24.0),
-        headline4: TextStyle(color: colorScheme.onBackground, fontWeight: _bold, fontSize: 20.0),
-        bodyText1: TextStyle(color: colorScheme.onBackground,fontWeight: _medium, fontSize: 20.0),
-        bodyText2: TextStyle(color: colorScheme.onBackground,fontWeight: _medium, fontSize: 10.0),
-        subtitle1: TextStyle(color: colorScheme.onBackground, fontWeight: _regular, fontSize: 20.0),
-        subtitle2: TextStyle(color: colorScheme.onBackground, fontWeight: _regular, fontSize: 16.0),
+        headline1: TextStyle(
+            color: colorScheme.onBackground,
+            fontWeight: _ultra,
+            fontSize: 26.0),
+        headline2: TextStyle(
+            color: colorScheme.onBackground, fontWeight: _bold, fontSize: 26.0),
+        headline3: TextStyle(
+            color: colorScheme.onBackground, fontWeight: _bold, fontSize: 24.0),
+        headline4: TextStyle(
+            color: colorScheme.onBackground, fontWeight: _bold, fontSize: 20.0),
+        bodyText1: TextStyle(
+            color: colorScheme.onBackground,
+            fontWeight: _medium,
+            fontSize: 20.0),
+        bodyText2: TextStyle(
+            color: colorScheme.onBackground,
+            fontWeight: _medium,
+            fontSize: 10.0),
+        subtitle1: TextStyle(
+            color: colorScheme.onBackground,
+            fontWeight: _regular,
+            fontSize: 20.0),
+        subtitle2: TextStyle(
+            color: colorScheme.onBackground,
+            fontWeight: _regular,
+            fontSize: 16.0),
         // overline: TextStyle(color: colorScheme.onBackground, fontWeight: _medium, fontSize: 12.0),
         // caption: TextStyle(color: colorScheme.onBackground, fontWeight: _ultra, fontSize: 16.0),
         // button: TextStyle(color: colorScheme.onBackground, fontWeight: _ultra, fontSize: 14.0),
@@ -55,6 +73,12 @@ class AppThemeData {
         color: colorScheme.primary,
         space: 2.0,
         thickness: 2.0,
+      ),
+      cardTheme: CardTheme(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 0,
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
@@ -112,5 +136,4 @@ class AppThemeData {
   static const _medium = FontWeight.w500;
   static const _bold = FontWeight.w700;
   static const _ultra = FontWeight.w900;
-
 }

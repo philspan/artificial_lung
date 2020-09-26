@@ -31,8 +31,6 @@ class Bluetooth {
   final String deviceName;
 
   Bluetooth({this.deviceName, this.serviceUUID, this.characteristicUUID}) {
-    // TODO check bluetooth isavailable
-
     dataSendController.stream.listen((event) {
       // from application to device
       _onDataSend(event);
@@ -43,8 +41,6 @@ class Bluetooth {
       // from device to application
       _onDataReceive(event);
     });
-
-    startScan();
   }
 
   void dispose() {
@@ -53,11 +49,19 @@ class Bluetooth {
     dataReceiveController.close();
   }
 
+  Future initialize() async {
+    // TODO check bluetooth isavailable
+    // TODO check if system is already connected
+    // TODO implement connecting to unknown device
+
+    await startScan();
+  }
+
   // Private function called by dataSendController when application needs to send data to the bluetooth device.
   // dataSendController listens to data sent from UI text fields and switches. When sending, it calls this function.
   void _onDataSend(String data) async {
     //TODO format data to be sent. Waiting for Navid
-    await writeData(data);
+    await _writeData(data);
     // depends on if code should reset and rely on the bluetooth values vs what is passed
   }
 
@@ -84,6 +88,10 @@ class Bluetooth {
     newData[key] = value;
     await _storage.appendDatumToFile(Datum.fromJson(newData));
     await _dataService.fetchData(); // refresh app data, TODO not needed?
+  }
+
+  void addDataToSendController(String data) {
+    dataSendController.add(data);
   }
 
   BluetoothStatus _getStateFromEvent(event) {
@@ -158,7 +166,7 @@ class Bluetooth {
     await targetCharacteristic.setNotifyValue(true);
     targetCharacteristic.value.listen((value) {
       // adds converted string value to the receive controller
-      dataReceiveController.add(convertData(value));
+      dataReceiveController.add(_convertData(value));
     });
   }
 
@@ -180,7 +188,7 @@ class Bluetooth {
           if (characteristic.uuid.toString() == characteristicUUID) {
             targetCharacteristic = characteristic;
             // send data to device so it knows it is connected
-            writeData("Connected");
+            _writeData("Connected");
             // setstate to device ready
           }
         });
@@ -188,13 +196,13 @@ class Bluetooth {
     });
   }
 
-  Future<Null> writeData(String data) async {
+  Future<Null> _writeData(String data) async {
     if (targetCharacteristic == null) return;
     List<int> bytes = utf8.encode(data);
     await targetCharacteristic.write(bytes);
   }
 
-  String convertData(List<int> bytes) {
+  String _convertData(List<int> bytes) {
     // possibly throw error and wrap reading in try catch
     if (targetCharacteristic == null) return "";
     return utf8.decode(bytes);
