@@ -1,14 +1,17 @@
-import 'package:artificial_lung/ui/views/history/history_view.dart';
-import 'package:artificial_lung/ui/views/sensors/sensors_view.dart';
-import 'package:artificial_lung/ui/views/servoregulation/servoregulation_view.dart';
-import 'package:artificial_lung/ui/views/startup/startup_view.dart';
+import 'package:artificial_lung/ui/views/home/edit_favorites_view.dart';
+import 'package:artificial_lung/ui/views/navigation/navigation_view.dart';
+import 'package:artificial_lung/ui/views/sensor_control/sensor_control_view.dart';
+import 'package:artificial_lung/ui/views/notifications/notifications_view.dart';
+import 'package:artificial_lung/ui/views/home/home_view.dart';
+import 'package:artificial_lung/ui/views/settings/settings_view.dart';
 import 'package:flutter/material.dart';
 
 // define routes
-const String HistoryRoute = '/history';
-const String SensorsRoute = '/sensors';
-const String ServoRegulationRoute = '/servoregulation';
-const String StartupRoute = '/initial';
+const String NavigationRoute = '/nav';
+const String HomeRoute = '/home';
+const String NotificationsRoute = '/notifications';
+const String SettingsRoute = '/settings';
+const String EditFavoritesRoute = '/editfavorites';
 
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -25,19 +28,21 @@ class NavigationService {
 Route<dynamic> generateRoute(RouteSettings settings) {
   print(settings.name);
   switch (settings.name) {
-    case StartupRoute:
-      return MaterialPageRoute(builder: (context) => StartupView());
-    case HistoryRoute:
-      return MaterialPageRoute(builder: (context) => HistoryView());
+    case NavigationRoute:
+      return MaterialPageRoute(builder: (context) => NavigationView());
+    case HomeRoute:
+      return MaterialPageRoute(builder: (context) => HomeView());
+    case NotificationsRoute:
+      return MaterialPageRoute(builder: (context) => NotificationsView());
     // return _getPageRoute(HomeView(), settings);
-    case SensorsRoute:
-      return MaterialPageRoute(builder: (context) => SensorsView());
+    case SettingsRoute:
+      return MaterialPageRoute(builder: (context) => SettingsView());
     // return _getPageRoute(CO2SensorScreen(), settings);
-    case ServoRegulationRoute:
-      return MaterialPageRoute(builder: (context) => ServoRegulationView());
+    case EditFavoritesRoute:
+      return MaterialPageRoute(builder: (context) => EditFavoritesView());
     // return _getPageRoute(SettingsView(), settings);
     default:
-      return MaterialPageRoute(builder: (context) => SensorsView());
+      return MaterialPageRoute(builder: (context) => HomeView());
   }
 }
 
