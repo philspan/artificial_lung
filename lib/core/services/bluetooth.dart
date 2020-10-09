@@ -17,10 +17,9 @@ class Bluetooth {
   StreamSubscription<BluetoothDeviceState> deviceStateSubscription;
   BluetoothStatus bluetoothStatus = BluetoothStatus.Disconnected;
 
-  //TODO make streams private _, create functions to add to streams
-  StreamController<String> dataSendController =
+  StreamController<String> _dataSendController =
       StreamController<String>.broadcast();
-  StreamController<String> dataReceiveController =
+  StreamController<String> _dataReceiveController =
       StreamController<String>.broadcast();
 
   BluetoothDevice targetDevice;
@@ -30,43 +29,44 @@ class Bluetooth {
   final String characteristicUUID;
   final String deviceName;
 
+  /// Initializes bluetooth streams and creates Bluetooth instance.
   Bluetooth({this.deviceName, this.serviceUUID, this.characteristicUUID}) {
-    dataSendController.stream.listen((event) {
+    _dataSendController.stream.listen((event) {
       // from application to device
       _onDataSend(event);
-      dataReceiveController.add(event);
+      _dataReceiveController.add(event);
       // TODO REMOVE: if this^ is added, it acts as if data has been sent through bluetooth and was received everytime you send something
     });
-    dataReceiveController.stream.listen((event) {
+    _dataReceiveController.stream.listen((event) {
       // from device to application
       _onDataReceive(event);
     });
   }
 
+  /// Cancels and closes all streams to prevent memory leaks.
   void dispose() {
     deviceStateSubscription.cancel();
-    dataSendController.close();
-    dataReceiveController.close();
+    _dataSendController.close();
+    _dataReceiveController.close();
   }
 
+  /// Initializes bluetooth communication and connects to specified device.
   Future initialize() async {
     // TODO check bluetooth isavailable
     // TODO check if system is already connected
     // TODO implement connecting to unknown device
 
-    await startScan();
+    await _startScan();
   }
 
-  // Private function called by dataSendController when application needs to send data to the bluetooth device.
-  // dataSendController listens to data sent from UI text fields and switches. When sending, it calls this function.
+  /// Called by dataSendController when application needs to send data to the bluetooth device.
   void _onDataSend(String data) async {
     //TODO format data to be sent. Waiting for Navid
     await _writeData(data);
     // depends on if code should reset and rely on the bluetooth values vs what is passed
   }
 
-  // Private function called by dataReceiveController when bluetooth device sends data to the application.
-  // dataReceiveController listens to data sent by the bluetooth device. When received, it calls this function.
+  /// Called by dataReceiveController when bluetooth device sends data to the application.
   void _onDataReceive(String data) async {
     //TODO is currently under the assumption that each send is one string of key, value pair, waiting for Navid. CHANGE soon
 
@@ -90,10 +90,12 @@ class Bluetooth {
     await _dataService.fetchData(); // refresh app data, TODO not needed?
   }
 
+  /// Adds data to stream to send from application to lung system.
   void addDataToSendController(String data) {
-    dataSendController.add(data);
+    _dataSendController.add(data);
   }
 
+  /// Converts bluetooth api state to bluetooth status
   BluetoothStatus _getStateFromEvent(event) {
     switch (event) {
       case BluetoothDeviceState.disconnected:
@@ -109,7 +111,8 @@ class Bluetooth {
     }
   }
 
-  startScan() {
+  /// Starts scan for specified bluetooth device and calls [_connectToDevice] if found.
+  _startScan() {
     flutterBlue.isAvailable.then((value) {
       if (value) {
         flutterBlue.startScan(timeout: Duration(seconds: 4));
@@ -124,29 +127,31 @@ class Bluetooth {
                   '${scanResult.device.name} found! rssi: ${scanResult.rssi}');
               targetDevice = scanResult.device;
 
-              connectToDevice();
+              _connectToDevice();
             }
           },
           onDone: () {
             if (targetDevice == null) {
-              connectToDevice(); // adds Disconnected status to stream
+              _connectToDevice(); // adds Disconnected status to stream
               print("targetDevice: ${targetDevice}");
             }
-            stopScan();
+            _stopScan();
           },
         );
       } else {
-        connectToDevice(); // add Disconnected status
+        _connectToDevice(); // add Disconnected status
       }
     });
   }
 
-  stopScan() {
+  /// Cancels scan for specified bluetooth device.
+  _stopScan() {
     scanSubscription?.cancel();
     scanSubscription = null;
   }
 
-  connectToDevice() async {
+  /// Connects to bluetooth device and updates bluetooth state.
+  _connectToDevice() async {
     if (targetDevice == null) {
       return;
     }
@@ -159,17 +164,18 @@ class Bluetooth {
 
     List<BluetoothDevice> connectedDevices = await flutterBlue.connectedDevices;
     if (connectedDevices.contains(deviceName)) {
-      discoverServices();
+      _discoverServices();
       print(targetDevice.name);
     }
 
     await targetCharacteristic.setNotifyValue(true);
     targetCharacteristic.value.listen((value) {
       // adds converted string value to the receive controller
-      dataReceiveController.add(_convertData(value));
+      _dataReceiveController.add(_convertData(value));
     });
   }
 
+  /// Disconnects from bluetooth device.
   disconnectFromDevice() {
     if (targetDevice == null) return;
 
@@ -177,8 +183,8 @@ class Bluetooth {
     targetDevice.disconnect();
   }
 
-  // discover services available to device
-  discoverServices() async {
+  // Discovers bluetooth services available to device
+  _discoverServices() async {
     if (targetDevice == null) return;
 
     List<BluetoothService> services = await targetDevice.discoverServices();
