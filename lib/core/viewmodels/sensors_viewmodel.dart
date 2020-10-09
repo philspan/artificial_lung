@@ -26,32 +26,32 @@ class SensorsViewModel extends ReactiveViewModel {
   List<ReactiveServiceMixin> get reactiveServices => [_dataService];
 
   void enableAirState() {
-    _bluetooth.dataSendController.add("air state : true");
+    // _bluetooth.dataSendController.add("air state : true");
     notifyListeners();
   }
 
   void disableAirState() {
-    _bluetooth.dataSendController.add("air state : false");
+    // _bluetooth.dataSendController.add("air state : false");
     notifyListeners();
   }
 
   void enableFlowState() {
-    _bluetooth.dataSendController.add("flow state : true");
+    // _bluetooth.dataSendController.add("flow state : true");
     notifyListeners();
   }
 
   void disableFlowState() {
-    _bluetooth.dataSendController.add("flow state : false");
+    // _bluetooth.dataSendController.add("flow state : false");
     notifyListeners();
   }
 
   void enableCO2State() {
-    _bluetooth.dataSendController.add("co2 state : true");
+    // _bluetooth.dataSendController.add("co2 state : true");
     notifyListeners();
   }
 
   void disableCO2State() {
-    _bluetooth.dataSendController.add("co2 state : false");
+    // _bluetooth.dataSendController.add("co2 state : false");
     notifyListeners();
   }
 }

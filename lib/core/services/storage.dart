@@ -10,19 +10,22 @@ class Storage extends ChangeNotifier {
 
   String fileName;
 
+  /// Initializes file storage by calling [localFile].
   Future initialize() async {
     // TODO check for file if null, create one
     await localFile;
     return;
   }
 
-  Future<String> get localPath async {
+  /// Gets directory path where data file is stored.
+  Future<String> get _localPath async {
     final dir = await getApplicationDocumentsDirectory();
     return dir.path;
   }
 
+  /// Gets filepath where data is written to.
   Future<File> get localFile async {
-    final path = await localPath;
+    final path = await _localPath;
     return File('$path/$fileName');
   }
 
@@ -71,7 +74,8 @@ class Storage extends ChangeNotifier {
     }
   }
 
-  Future<File> writeDataToFile(List<Datum> data) async {
+  /// Overwrites List<Datum> to file.
+  Future<File> _writeDataToFile(List<Datum> data) async {
     try {
       final file = await localFile;
       return file.writeAsString(jsonEncode(data));
@@ -80,10 +84,11 @@ class Storage extends ChangeNotifier {
     }
   }
 
+  /// Appends Datum to front of file.
   Future<File> appendDatumToFile(Datum datum) async {
     var currentData = await readDataFromFile();
     currentData.insert(0, datum);
-    var file = await writeDataToFile(currentData);
+    var file = await _writeDataToFile(currentData);
     return file;
   }
 }

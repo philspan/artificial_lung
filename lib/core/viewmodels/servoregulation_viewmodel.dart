@@ -21,42 +21,42 @@ class ServoRegulationViewModel extends ReactiveViewModel {
   List<ReactiveServiceMixin> get reactiveServices => [_dataService];
 
   void enableServoregulation() {
-    _bluetooth.dataSendController.add("system mode : 1");
+    // _bluetooth.dataSendController.add("system mode : 1");
     notifyListeners();
   }
 
   void enableFlowControl() {
-    _bluetooth.dataSendController.add("system mode : 0");
+    // _bluetooth.dataSendController.add("system mode : 0");
   }
 
   void updateTargetCO2Level(String value) {
     //TODO implement error handling
     if (value != "")
-      _bluetooth.dataSendController.add("CO2 level : ${double.parse(value)}");
+      // _bluetooth.dataSendController.add("CO2 level : ${double.parse(value)}");
     notifyListeners();
   }
 
   void updatePGain(String value) {
     //TODO implement error handling
     if (value != "")
-      _bluetooth.dataSendController
-          .add("Proportional gain : ${double.parse(value)}");
+      // _bluetooth.dataSendController
+          // .add("Proportional gain : ${double.parse(value)}");
     notifyListeners();
   }
 
   void updateIGain(String value) {
     //TODO implement error handling
     if (value != "")
-      _bluetooth.dataSendController
-          .add("Integral gain : ${double.parse(value)}");
+      // _bluetooth.dataSendController
+          // .add("Integral gain : ${double.parse(value)}");
     notifyListeners();
   }
 
   void updateDGain(String value) {
     //TODO implement error handling
     if (value != "")
-      _bluetooth.dataSendController
-          .add("Derivative gain : ${double.parse(value)}");
+      // _bluetooth.dataSendController
+          // .add("Derivative gain : ${double.parse(value)}");
     notifyListeners();
   }
 }

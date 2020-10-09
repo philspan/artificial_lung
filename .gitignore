@@ -35,3 +35,11 @@ lib/generated_plugin_registrant.dart
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+# User entered exclusions
+.gitignore
+.vscode
+android/
+ios/
+pubspec.lock
+lib/ui/themes/fonts/*
