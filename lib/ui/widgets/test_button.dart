@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:artificial_lung/core/viewmodels/history_viewmodel.dart';
+import 'package:artificial_lung/ui/views/history/history_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

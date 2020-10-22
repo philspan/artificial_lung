@@ -1,4 +1,4 @@
-import 'package:artificial_lung/core/viewmodels/servoregulation_viewmodel.dart';
+import 'package:artificial_lung/ui/views/servoregulation/servoregulation_viewmodel.dart';
 import 'package:artificial_lung/ui/widgets/adaptive_switch_list_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
