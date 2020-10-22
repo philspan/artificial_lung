@@ -42,4 +42,4 @@ lib/generated_plugin_registrant.dart
 android/
 ios/
 pubspec.lock
-lib/ui/themes/fonts/*
+lib/ui/themes/fonts/Sinter/*
