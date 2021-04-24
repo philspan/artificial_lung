@@ -7,6 +7,7 @@ class NotificationsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NotificationsViewModel>.reactive(
+      viewModelBuilder: () => NotificationsViewModel(),
       builder: (context, model, child) => Scaffold(
         body: Column(
           children: <Widget>[
@@ -48,7 +49,6 @@ class NotificationsView extends StatelessWidget {
           ],
         ),
       ),
-      viewModelBuilder: () => NotificationsViewModel(),
     );
   }
 }

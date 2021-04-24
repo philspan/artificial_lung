@@ -3,38 +3,28 @@ import 'package:artificial_lung/core/services/data.dart';
 import 'package:artificial_lung/locator.dart';
 import 'package:stacked/stacked.dart';
 
-class SensorControlViewModel extends BaseViewModel {
+class SensorControlViewModel extends ReactiveViewModel {
   final _dataService = locator<DataService>();
   final _bluetooth = locator<Bluetooth>();
 
   final String _noData = "No Data";
   String get noData => _noData;
 
-  int get currentMode => _dataService.currentMode;
+  int get currentMode => _dataService.hasData ? _dataService.recent.systemData.systemMode : null;
 
   bool get hasCO2Data => co2Removal != null;
-  get recentCO2DataTimestamp => null;
-  bool get recentCO2SensorStatus => _dataService.recentCo2State;
-  double get co2Removal => _dataService.co2Level.first;
+  double get co2Removal => _dataService.hasData ? _dataService.recent.co2Data.co2Level : null;
 
   bool get hasFlowData => flowRate != null;
-  get recentFlowDataTimestamp => null;
-  bool get recentFlowSensorStatus => _dataService.recentFlowState;
-  double get flowVoltage => _dataService.recentFlowVoltage;
-  double get flowRate => _dataService.recentFlowRate;
+  double get flowRate => _dataService.hasData ? _dataService.recent.flowData.flowLevel : null;
+  double get flowSLPM => _dataService.hasData ? _dataService.recent.flowData.targetLevel : null;
 
-  bool get hasBlowerData => recentBlowerDataTimestamp != null;
-  get recentBlowerDataTimestamp => 0;
-  get recentBlowerSensorStatus => false;
-  double get blowerVoltage => _dataService.recentBlowerVoltage;
-  double get blowerCurrent => _dataService.recentBlowerCurrent;
-  double get blowerPower => (blowerVoltage * blowerCurrent);
-  double get blowerSLPM => _dataService.recentBlowerPower;
+  bool get hasBatteryData => batteryLevel != null;
+  double get batteryLevel => _dataService.hasData ? _dataService.recent.batteryData.batteryLevel : null;
+  double get batteryVoltage => _dataService.hasData ? _dataService.recent.batteryData.batteryVoltage : null;
+  double get batteryCurrent => _dataService.hasData ? _dataService.recent.batteryData.batteryCurrent : null;
 
-  void updateSelectedMode(int value) {
-    // TODO uncomment bluetooth send remove dataservice line
-    _dataService.currentMode = value;
-    // _bluetooth.addDataToSendController("selected mode : $value"); 
-    notifyListeners();
-  }
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_dataService];
+
 }

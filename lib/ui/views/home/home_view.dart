@@ -8,6 +8,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
+      viewModelBuilder: () => HomeViewModel(),
       builder: (context, model, child) => Scaffold(
         body: Column(
           children: <Widget>[
@@ -35,7 +36,6 @@ class HomeView extends StatelessWidget {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          //TODO implement routing to notifications view
                           model.navigateToNotifications();
                           print("notifications tapped");
                         },
@@ -83,7 +83,6 @@ class HomeView extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          //TODO implement routing to settings view
                           model.navigateToSettings();
                           print("settings tapped");
                         },
@@ -100,7 +99,6 @@ class HomeView extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                //TODO implement routing to System History view
                 model.navigateToSystemHistory();
                 print("System tapped");
               },
@@ -210,7 +208,6 @@ class HomeView extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                //TODO implement routing to edit view
                                 model.navigateToEditFavorites();
                                 print("Edit tapped");
                               },
@@ -353,7 +350,6 @@ class HomeView extends StatelessWidget {
           ],
         ),
       ),
-      viewModelBuilder: () => HomeViewModel(),
     );
   }
 }

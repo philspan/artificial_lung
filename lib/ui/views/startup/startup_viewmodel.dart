@@ -11,7 +11,7 @@ class StartupViewModel extends BaseViewModel {
   final _storage = locator<Storage>();
   final _dataService = locator<DataService>();
 
-  Future initialize() async {
+  Future<void> initialize() async {
     // initialize Bluetooth
     await _bluetooth.initialize();
 

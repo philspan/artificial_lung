@@ -9,6 +9,9 @@ class StartupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<StartupViewModel>.reactive(
+      onModelReady: (model) => SchedulerBinding.instance
+          .addPostFrameCallback((_) => model.initialize()),
+      viewModelBuilder: () => StartupViewModel(),
       builder: (context, model, child) => Scaffold(
         body: Center(
           child: Column(
@@ -21,10 +24,6 @@ class StartupView extends StatelessWidget {
           ),
         ),
       ),
-      onModelReady: (model) => SchedulerBinding.instance.addPostFrameCallback(
-        (_) => model.initialize(),
-      ),
-      viewModelBuilder: () => StartupViewModel(),
     );
   }
 }

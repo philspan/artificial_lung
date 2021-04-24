@@ -7,8 +7,9 @@ import 'package:artificial_lung/core/services/data.dart';
 import 'package:artificial_lung/core/services/storage.dart';
 import 'package:artificial_lung/locator.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:stacked/stacked.dart';
 
-class Bluetooth {
+class Bluetooth with ReactiveServiceMixin {
   FlutterBlue flutterBlue = FlutterBlue.instance;
   final _dataService = locator<DataService>();
   final _storage = locator<Storage>();
@@ -23,13 +24,16 @@ class Bluetooth {
       StreamController<String>.broadcast();
 
   BluetoothDevice targetDevice;
-  BluetoothCharacteristic targetCharacteristic;
+  BluetoothCharacteristic targetWriteCharacteristic;
+  BluetoothCharacteristic targetReadCharacteristic;
 
   final String serviceUUID;
   final String characteristicUUID;
   final String deviceName;
+  final String deviceNameCharacteristicUUID =
+      "00002a00-0000-1000-8000-00805f9b34fb";
 
-  /// Initializes bluetooth streams and creates Bluetooth instance.
+  /// Constructs Bluetooth instance and initializes bluetooth streams.
   Bluetooth({this.deviceName, this.serviceUUID, this.characteristicUUID}) {
     _dataSendController.stream.listen((event) {
       // from application to device
@@ -51,48 +55,180 @@ class Bluetooth {
   }
 
   /// Initializes bluetooth communication and connects to specified device.
-  Future initialize() async {
-    // TODO check bluetooth isavailable
-    // TODO check if system is already connected
-    // TODO implement connecting to unknown device
+  void initialize() {
+    // TODO BT check bluetooth isavailable, inform user to turn on bluetooth
+    // TODO BT check if system is already connected, not possible right now
+    // TODO BT implement connecting to unknown device
 
-    await _startScan();
+    // on startup:
+    // check if bluetooth available, prompt to turn on bluetooth
+    // check for previous device, if no device, prompt for new device on startup
+    // in menu:
+    // prompt for new device.
+
+    // check for previous device, if no device, prompt for new device on startup
+    // implement prompt for new device
+    _startScan();
+  }
+
+  /// Adds data to stream to send from application to lung system.
+  void pushDataToSystem(String data) {
+    _dataSendController.add(data);
   }
 
   /// Called by dataSendController when application needs to send data to the bluetooth device.
   void _onDataSend(String data) async {
-    //TODO format data to be sent. Waiting for Navid
-    await _writeData(data);
-    // depends on if code should reset and rely on the bluetooth values vs what is passed
+    await _writeStringToDevice(data);
   }
 
   /// Called by dataReceiveController when bluetooth device sends data to the application.
   void _onDataReceive(String data) async {
-    //TODO is currently under the assumption that each send is one string of key, value pair, waiting for Navid. CHANGE soon
+    try {
+      // parse data received
+      List<String> pairs = data.split("\r\n");
+      Map<String, dynamic> parsedMap = Map<String, dynamic>();
+      parsedMap["${CO2Data.asString}"] = Map<String, dynamic>();
+      parsedMap["${FlowData.asString}"] = Map<String, dynamic>();
+      parsedMap["${SystemData.asString}"] = Map<String, dynamic>();
+      parsedMap["${BatteryData.asString}"] = Map<String, dynamic>();
+      pairs.forEach(
+        (element) {
+          List<String> separated = element.split('=');
+          print(separated);
+          if (separated.length > 2)
+            throw Exception("Invalid String: $separated");
+          switch (separated.first) {
+            case "${Node.timestampFromJson}":
+              parsedMap["${Node.timestampFromJson}"] = separated.last;
+              break;
+            // System Data
+            case "${SystemData.systemModeFromJson}":
+              parsedMap["${SystemData.asString}"]
+                      ["${SystemData.systemModeFromJson}"] =
+                  int.tryParse(separated.last) ?? separated.last;
+              break;
+            // Battery Data
+            case "${BatteryData.batteryLevelFromJson}":
+              parsedMap["${BatteryData.asString}"]
+                      ["${BatteryData.batteryLevelFromJson}"] =
+                  double.tryParse(separated.last) ?? separated.last;
+              break;
+            case "${BatteryData.batteryVoltageFromJson}":
+              parsedMap["${BatteryData.asString}"]
+                      ["${BatteryData.batteryVoltageFromJson}"] =
+                  double.tryParse(separated.last) ?? separated.last;
+              break;
+            case "Current":
+              parsedMap["${BatteryData.asString}"]
+                      ["${BatteryData.batteryCurrentFromJson}"] =
+                  double.tryParse(separated.last) ?? separated.last;
+              break;
+            case "is charging":
+              parsedMap["${BatteryData.asString}"]
+                      ["${BatteryData.isChargingFromJson}"] =
+                  separated.last.toLowerCase();
+              break;
+            // CO2 Data
+            case "CO2 level":
+              parsedMap["${CO2Data.asString}"]["${CO2Data.co2LevelFromJson}"] =
+                  double.tryParse(separated.last) ?? separated.last;
+              break;
+            case "Target CO2 level":
+              parsedMap["${CO2Data.asString}"]
+                      ["${CO2Data.targetCo2LevelFromJson}"] =
+                  double.tryParse(separated.last) ?? separated.last;
+              break;
+            case "Flow level":
+              parsedMap["${FlowData.asString}"]
+                      ["${FlowData.flowLevelFromJson}"] =
+                  double.tryParse(separated.last) ?? separated.last;
+              break;
+            case "Target Flow level":
+              parsedMap["${FlowData.asString}"]
+                      ["${FlowData.targetFlowLevelFromJson}"] =
+                  double.tryParse(separated.last) ?? separated.last;
+              break;
+            // Shared Data
+            case "Proportional gain":
+              switch (parsedMap["${SystemData.asString}"]
+                      ["${SystemData.systemModeFromJson}"]
+                  .toString()) {
+                case "${SystemData.co2Mode}":
+                  parsedMap["${CO2Data.asString}"]
+                          ["${CO2Data.pValueFromJson}"] =
+                      double.tryParse(separated.last) ?? separated.last;
+                  break;
+                case "${SystemData.flowMode}":
+                  parsedMap["${FlowData.asString}"]
+                          ["${FlowData.pValueFromJson}"] =
+                      double.tryParse(separated.last) ?? separated.last;
+                  break;
+                default:
+                  // hasn't been assigned
+                  print(
+                      "Not assigned: ${separated.first}, ${separated.first.runtimeType}");
+                  break;
+              }
+              break;
+            case "Integral gain":
+              switch (parsedMap["${SystemData.asString}"]
+                      ["${SystemData.systemModeFromJson}"]
+                  .toString()) {
+                case "${SystemData.co2Mode}":
+                  parsedMap["${CO2Data.asString}"]
+                          ["${CO2Data.iValueFromJson}"] =
+                      double.tryParse(separated.last) ?? separated.last;
+                  break;
+                case "${SystemData.flowMode}":
+                  parsedMap["${FlowData.asString}"]
+                          ["${FlowData.iValueFromJson}"] =
+                      double.tryParse(separated.last) ?? separated.last;
+                  break;
+                default:
+                  // hasn't been assigned
+                  print(
+                      "Not assigned: ${separated.first}, ${separated.first.runtimeType}");
+                  break;
+              }
+              break;
 
-    //TODO check for null data string first
-    List<String> pair = data.split(" : "); // key,value
-    String key = pair.first;
-    dynamic value = (key.contains("state")
-        ? (pair.last == "true")
-        : double.parse(pair.last));
-    if (key.contains("system mode")) value = int.parse(pair.last);
-
-    if (pair.length > 2) {
-      print("error: onDataReceive passed incorrectly formatted string");
+            case "Derivative gain":
+              switch (parsedMap["${SystemData.asString}"]
+                      ["${SystemData.systemModeFromJson}"]
+                  .toString()) {
+                case "${SystemData.co2Mode}":
+                  parsedMap["${CO2Data.asString}"]
+                          ["${CO2Data.dValueFromJson}"] =
+                      double.tryParse(separated.last) ?? separated.last;
+                  break;
+                case "${SystemData.flowMode}":
+                  parsedMap["${FlowData.asString}"]
+                          ["${FlowData.dValueFromJson}"] =
+                      double.tryParse(separated.last) ?? separated.last;
+                  break;
+                default:
+                  // hasn't been assigned
+                  print(
+                      "Not assigned: ${separated.first}, ${separated.first.runtimeType}");
+                  break;
+              }
+              break;
+            default:
+              print(
+                  "Not assigned: ${separated.first}, ${separated.first.runtimeType}");
+              // throw exception?
+              break;
+          }
+        },
+      );
+      // insert parsed into file
+      await _dataService.fetchData();
+      await _storage.appendNodeToFile(Node.fromJson(parsedMap));
+      await _dataService.fetchData();
+    } catch (e) {
+      print(e.toString());
       return;
     }
-
-    await _dataService.fetchData();
-    Map<String, dynamic> newData = _dataService.first.toJson();
-    newData[key] = value;
-    await _storage.appendDatumToFile(Datum.fromJson(newData));
-    await _dataService.fetchData(); // refresh app data, TODO not needed?
-  }
-
-  /// Adds data to stream to send from application to lung system.
-  void addDataToSendController(String data) {
-    _dataSendController.add(data);
   }
 
   /// Converts bluetooth api state to bluetooth status
@@ -112,46 +248,39 @@ class Bluetooth {
   }
 
   /// Starts scan for specified bluetooth device and calls [_connectToDevice] if found.
-  _startScan() {
-    flutterBlue.isAvailable.then((value) {
-      if (value) {
-        flutterBlue.startScan(timeout: Duration(seconds: 4));
+  void _startScan() {
+    flutterBlue.startScan(timeout: Duration(seconds: 4));
 
-        // Listen to scan results
-        scanSubscription = flutterBlue.scan().listen(
-          (scanResult) {
-            // search for deviceName
-            if (scanResult.device.name == deviceName) {
-              flutterBlue.stopScan();
-              print(
-                  '${scanResult.device.name} found! rssi: ${scanResult.rssi}');
-              targetDevice = scanResult.device;
-
-              _connectToDevice();
-            }
-          },
-          onDone: () {
-            if (targetDevice == null) {
-              _connectToDevice(); // adds Disconnected status to stream
-              print("targetDevice: ${targetDevice}");
-            }
-            _stopScan();
-          },
-        );
-      } else {
-        _connectToDevice(); // add Disconnected status
-      }
-    });
+    // Listen to scan results
+    scanSubscription = flutterBlue.scan().listen(
+      (scanResult) {
+        print('${scanResult.device.name} found! rssi: ${scanResult.rssi}');
+      },
+      onDone: () {
+        if (targetDevice == null) {
+          _connectToDevice(); // adds Disconnected status to stream
+          print("targetDevice: $targetDevice");
+        }
+        _stopScan();
+      },
+    );
   }
 
   /// Cancels scan for specified bluetooth device.
   _stopScan() {
+    flutterBlue.stopScan();
     scanSubscription?.cancel();
     scanSubscription = null;
   }
 
+  /// Connect to desired bluetooth device and update state.
+  Future<void> connectToDevice(BluetoothDevice target) async {
+    targetDevice = target;
+    await _connectToDevice();
+  }
+
   /// Connects to bluetooth device and updates bluetooth state.
-  _connectToDevice() async {
+  Future<void> _connectToDevice() async {
     if (targetDevice == null) {
       return;
     }
@@ -161,56 +290,60 @@ class Bluetooth {
     });
 
     await targetDevice.connect();
+    await _discoverServices();
+    // await targetReadCharacteristic.setNotifyValue(true);
+    print(
+        "DeviceName: ${_convertBytesToString(await targetReadCharacteristic.read())}");
 
-    List<BluetoothDevice> connectedDevices = await flutterBlue.connectedDevices;
-    if (connectedDevices.contains(deviceName)) {
-      _discoverServices();
-      print(targetDevice.name);
-    }
-
-    await targetCharacteristic.setNotifyValue(true);
-    targetCharacteristic.value.listen((value) {
+    targetReadCharacteristic.value.listen((value) {
       // adds converted string value to the receive controller
-      _dataReceiveController.add(_convertData(value));
+      _dataReceiveController.add(_convertBytesToString(value));
     });
   }
 
   /// Disconnects from bluetooth device.
-  disconnectFromDevice() {
+  void disconnectFromDevice() {
     if (targetDevice == null) return;
 
     // deviceStateSubscription.cancel();
     targetDevice.disconnect();
   }
 
-  // Discovers bluetooth services available to device
-  _discoverServices() async {
+  /// Discovers bluetooth services available to device
+  Future<void> _discoverServices() async {
     if (targetDevice == null) return;
 
     List<BluetoothService> services = await targetDevice.discoverServices();
-    services.forEach((service) {
-      if (service.uuid.toString() == serviceUUID) {
-        service.characteristics.forEach((characteristic) {
-          if (characteristic.uuid.toString() == characteristicUUID) {
-            targetCharacteristic = characteristic;
-            // send data to device so it knows it is connected
-            _writeData("Connected");
-            // setstate to device ready
-          }
-        });
+    for (BluetoothService service in services) {
+      print(service);
+      for (BluetoothCharacteristic characteristic in service.characteristics) {
+        // print("characteristic: $characteristic");
+        if (characteristic.properties.write) {
+          targetWriteCharacteristic = characteristic;
+        }
+        if (characteristic.properties.read &&
+            characteristic.uuid.toString() == deviceNameCharacteristicUUID) {
+          // device name characteristic
+          targetReadCharacteristic = characteristic;
+        }
+        // send data to device so it knows it is connected
+        // _writeStringToDevice("Connected");
+        // setstate to device ready
       }
-    });
+    }
   }
 
-  Future<Null> _writeData(String data) async {
-    if (targetCharacteristic == null) return;
+  /// Writes string to current connected bluetooth device
+  Future<Null> _writeStringToDevice(String data) async {
+    if (targetWriteCharacteristic == null) return;
     List<int> bytes = utf8.encode(data);
-    await targetCharacteristic.write(bytes);
+    await targetWriteCharacteristic.write(bytes);
   }
 
-  String _convertData(List<int> bytes) {
+  /// Converts bytes and returns string of bytes
+  String _convertBytesToString(List<int> bytes) {
     // possibly throw error and wrap reading in try catch
-    if (targetCharacteristic == null) return "";
+    if (targetReadCharacteristic == null) return "";
     return utf8.decode(bytes);
   }
 }

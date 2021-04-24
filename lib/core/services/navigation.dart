@@ -1,6 +1,7 @@
+import 'package:artificial_lung/ui/views/connect_device/connect_device_view.dart';
+import 'package:artificial_lung/ui/views/graphing/graphing_view.dart';
 import 'package:artificial_lung/ui/views/home/edit_favorites_view.dart';
 import 'package:artificial_lung/ui/views/navigation/navigation_view.dart';
-import 'package:artificial_lung/ui/views/sensor_control/sensor_control_view.dart';
 import 'package:artificial_lung/ui/views/notifications/notifications_view.dart';
 import 'package:artificial_lung/ui/views/home/home_view.dart';
 import 'package:artificial_lung/ui/views/settings/settings_view.dart';
@@ -12,6 +13,8 @@ const String HomeRoute = '/home';
 const String NotificationsRoute = '/notifications';
 const String SettingsRoute = '/settings';
 const String EditFavoritesRoute = '/editfavorites';
+const String ConnectDeviceRoute = '/connect';
+const String GraphingRoute = '/graph';
 
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -41,6 +44,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case EditFavoritesRoute:
       return MaterialPageRoute(builder: (context) => EditFavoritesView());
     // return _getPageRoute(SettingsView(), settings);
+    case ConnectDeviceRoute:
+      return MaterialPageRoute(builder: (context) => ConnectDeviceView());
+    case GraphingRoute:
+      return MaterialPageRoute(builder: (context) => GraphingView());
     default:
       return MaterialPageRoute(builder: (context) => HomeView());
   }

@@ -7,6 +7,7 @@ class EditFavoritesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<EditFavoritesViewModel>.reactive(
+      viewModelBuilder: () => EditFavoritesViewModel(),
       builder: (context, model, child) => Scaffold(
         body: Column(
           children: <Widget>[
@@ -199,7 +200,6 @@ class EditFavoritesView extends StatelessWidget {
           ],
         ),
       ),
-      viewModelBuilder: () => EditFavoritesViewModel(),
     );
   }
 }

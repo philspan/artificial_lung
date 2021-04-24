@@ -35,6 +35,9 @@ class HomeViewModel extends IndexTrackingViewModel {
     }
   }
 
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_dataService];
+  
   String get date => "${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}";
 
   bool get hasNotifications =>
@@ -48,17 +51,17 @@ class HomeViewModel extends IndexTrackingViewModel {
   bool get hasSystemData => false;
   get recentSystemDataTimestamp => 0;
   bool get recentSystemStatus => false;
-  bool get recentSystemBattery => false;
+  bool get recentSystemBattery => _dataService.hasData ? (_dataService.recent.batteryData.batteryLevel ?? 0 >= 70) : false;
 
   bool get hasCO2Data => recentCo2Data != null;
   get recentCO2DataTimestamp => 0;
-  bool get recentCO2SensorStatus => _dataService.recentCo2State;
-  double get recentCo2Data => _dataService.recentCo2Level;
+  bool get recentCO2SensorStatus => false;
+  double get recentCo2Data => _dataService.hasData ? _dataService.recent.co2Data.co2Level : null;
 
   bool get hasFlowData => recentFlowRate != null;
   get recentFlowDataTimestamp => 0;
-  bool get recentFlowSensorStatus => _dataService.recentFlowState;
-  double get recentFlowRate => _dataService.recentFlowRate;
+  bool get recentFlowSensorStatus => false;
+  double get recentFlowRate => _dataService.hasData ? _dataService.recent.flowData.flowLevel : null;
 
   void navigateToNotifications() {
     _navigationService.navigateTo(NotificationsRoute);
@@ -73,6 +76,6 @@ class HomeViewModel extends IndexTrackingViewModel {
   }
 
   void navigateToSystemHistory() {
-    _navigationService.navigateTo(null); // TODO add system history page
+    _navigationService.navigateTo(GraphingRoute); // TODO ROUTING add system history page
   }
 }

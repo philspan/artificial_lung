@@ -9,6 +9,7 @@ class SensorControlView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SensorControlViewModel>.reactive(
+      viewModelBuilder: () => SensorControlViewModel(),
       builder: (context, model, child) => Scaffold(
         body: Column(
           children: <Widget>[
@@ -35,50 +36,10 @@ class SensorControlView extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(32, 16, 32, 0),
+                    padding: EdgeInsets.fromLTRB(32, 28, 32, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "Mode",
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        CupertinoSlidingSegmentedControl(
-                          children: {
-                            0: Padding(
-                              padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
-                              child: Text(
-                                "Servoregulation",
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                            ),
-                            1: Text(
-                              "Flow",
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          },
-                          onValueChanged: (value) {
-                            model.updateSelectedMode(value);
-                          },
-                          groupValue:
-                              model.currentMode, // model.selectedMode as value
-                          thumbColor: Theme.of(context).colorScheme.primary,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          padding: EdgeInsets.all(4),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,20 +72,7 @@ class SensorControlView extends StatelessWidget {
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
-                                    Container(
-                                      width: 32,
-                                      height: 19,
-                                      decoration: BoxDecoration(
-                                        color: model.recentCO2SensorStatus
-                                            ? Theme.of(context).indicatorColor
-                                            : Theme.of(context).disabledColor,
-                                        border: Border.all(
-                                            width: 1.0,
-                                            color: Theme.of(context)
-                                                .backgroundColor),
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
-                                    ),
+                                    
                                   ],
                                 ),
                                 SizedBox(
@@ -140,7 +88,7 @@ class SensorControlView extends StatelessWidget {
                                           Theme.of(context).textTheme.bodyText1,
                                     ),
                                     Text(
-                                      model.hasCO2Data
+                                      (model.hasCO2Data && model.co2Removal != null)
                                           ? model.co2Removal
                                                   .toStringAsFixed(2) +
                                               "%"
@@ -176,45 +124,10 @@ class SensorControlView extends StatelessWidget {
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
-                                    Container(
-                                      width: 32,
-                                      height: 19,
-                                      decoration: BoxDecoration(
-                                        color: model.recentFlowSensorStatus
-                                            ? Theme.of(context).indicatorColor
-                                            : Theme.of(context).disabledColor,
-                                        border: Border.all(
-                                            width: 1.0,
-                                            color: Theme.of(context)
-                                                .backgroundColor),
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
-                                    ),
                                   ],
                                 ),
                                 SizedBox(
                                   height: 8.0,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Voltage (V)",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    Text(
-                                      model.hasFlowData
-                                          ? model.flowVoltage.toStringAsFixed(2) + "V"
-                                          : model.noData,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 8,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -226,8 +139,29 @@ class SensorControlView extends StatelessWidget {
                                           Theme.of(context).textTheme.bodyText1,
                                     ),
                                     Text(
-                                      model.hasFlowData
+                                      (model.hasFlowData && model.flowRate != null)
                                           ? model.flowRate.toStringAsFixed(2)
+                                          : model.noData,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 8.0,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Estimated Flow (SLPM)",
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    Text(
+                                      (model.hasFlowData && model.flowSLPM != null)
+                                          ? model.flowSLPM.toStringAsFixed(2)
                                           : model.noData,
                                       style:
                                           Theme.of(context).textTheme.bodyText1,
@@ -264,23 +198,31 @@ class SensorControlView extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      "Air Blower",
+                                      "Battery",
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
-                                    Container(
-                                      width: 32,
-                                      height: 19,
-                                      decoration: BoxDecoration(
-                                        color: model.recentBlowerSensorStatus
-                                            ? Theme.of(context).indicatorColor
-                                            : Theme.of(context).disabledColor,
-                                        border: Border.all(
-                                            width: 1.0,
-                                            color: Theme.of(context)
-                                                .backgroundColor),
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
+                                  ],
+                                ),SizedBox(
+                                  height: 8.0,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Level (%)",
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    Text(
+                                      (model.hasBatteryData && model.batteryLevel != null)
+                                          ? model.batteryLevel
+                                                  .toStringAsFixed(2) +
+                                              " %"
+                                          : model.noData,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                     ),
                                   ],
                                 ),
@@ -297,8 +239,9 @@ class SensorControlView extends StatelessWidget {
                                           Theme.of(context).textTheme.bodyText1,
                                     ),
                                     Text(
-                                      model.hasBlowerData
-                                          ? model.blowerVoltage.toStringAsFixed(2) +
+                                      (model.hasBatteryData && model.batteryVoltage != null)
+                                          ? model.batteryVoltage
+                                                  .toStringAsFixed(2) +
                                               " V"
                                           : model.noData,
                                       style:
@@ -319,8 +262,9 @@ class SensorControlView extends StatelessWidget {
                                           Theme.of(context).textTheme.bodyText1,
                                     ),
                                     Text(
-                                      model.hasBlowerData
-                                          ? model.blowerCurrent.toStringAsFixed(2) +
+                                      (model.hasBatteryData && model.batteryCurrent != null)
+                                          ? model.batteryCurrent
+                                                  .toStringAsFixed(2) +
                                               " A"
                                           : model.noData,
                                       style:
@@ -336,49 +280,7 @@ class SensorControlView extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      "Power (W)",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    Text(
-                                      model.hasBlowerData
-                                          ? model.blowerPower.toStringAsFixed(2) + " W"
-                                          : model.noData,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 8.0,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Estimated Flow (SLPM)",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    Text(
-                                      model.hasBlowerData
-                                          ? model.blowerSLPM.toStringAsFixed(2)
-                                          : model.noData,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 8.0,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      model.hasBlowerData
+                                      model.hasBatteryData
                                           ? "April 29, 10:07 AM"
                                           : model.noData,
                                       style:
@@ -404,7 +306,6 @@ class SensorControlView extends StatelessWidget {
           ],
         ),
       ),
-      viewModelBuilder: () => SensorControlViewModel(),
     );
   }
 }
